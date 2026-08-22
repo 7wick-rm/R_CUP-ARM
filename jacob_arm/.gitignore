@@ -1,0 +1,8 @@
+# ROS 2 build, install, and log folders
+build/
+install/
+log/
+
+# VS Code configuration files
+.vscode/
+
