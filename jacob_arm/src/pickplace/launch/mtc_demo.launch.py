@@ -64,6 +64,7 @@ def generate_launch_description():
         name="static_transform_publisher",
         output="log",
         arguments=["--frame-id", "world", "--child-frame-id", "base_link"],
+        parameters=[{"use_sim_time":True}]
     )
 
     # # Robot State Publisher

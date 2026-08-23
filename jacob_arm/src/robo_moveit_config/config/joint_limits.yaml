@@ -11,35 +11,35 @@ joint_limits:
   Jaw:
     has_velocity_limits: true
     max_velocity: 10.0
-    has_acceleration_limits: false
+    has_acceleration_limits: true
     max_acceleration: 1.0
   Jaw2:
     has_velocity_limits: true
     max_velocity: 10.0
-    has_acceleration_limits: false
+    has_acceleration_limits: true
     max_acceleration: 1.0
   Joint1:
-    has_velocity_limits: false
+    has_velocity_limits: true
     max_velocity: 1.0
-    has_acceleration_limits: false
+    has_acceleration_limits: true
     max_acceleration: 1.0
   Joint2:
     has_velocity_limits: true
     max_velocity: 10.0
-    has_acceleration_limits: false
+    has_acceleration_limits: true
     max_acceleration: 1.0
   Joint3:
-    has_velocity_limits: false
+    has_velocity_limits: true
     max_velocity: 1.0
-    has_acceleration_limits: false
+    has_acceleration_limits: true
     max_acceleration: 1.0
   Joint4:
-    has_velocity_limits: false
+    has_velocity_limits: true
     max_velocity: 1.0
-    has_acceleration_limits: false
+    has_acceleration_limits: true
     max_acceleration: 1.0
   Joint5:
-    has_velocity_limits: false
+    has_velocity_limits: true
     max_velocity: 1.0
-    has_acceleration_limits: false
+    has_acceleration_limits: true
     max_acceleration: 1.0
