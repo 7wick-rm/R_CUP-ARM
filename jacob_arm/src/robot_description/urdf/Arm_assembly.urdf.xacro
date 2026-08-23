@@ -89,7 +89,7 @@
   </link>
   <joint
     name="Joint1"
-    type="continuous">
+    type="revolute">
     <origin
       xyz="0 0 0.0637999999999999"
       rpy="0 0 0" />
@@ -99,6 +99,11 @@
       link="Link1" />
     <axis
       xyz="0 0 1" />
+    <limit
+        lower="-3.14"
+        upper="3.14"
+        effort="100"
+        velocity="2.0"/>
   </joint>
 
   <joint name="base2world" type="fixed">
@@ -148,7 +153,7 @@
   </link>
   <joint
     name="Joint2"
-    type="continuous">
+    type="revolute">
     <origin
       xyz="0.0493654257105637 0.0629674380302429 0.096866312640014"
       rpy="-0.853422783514298 0.0375562443434387 0.921651311234904" />
@@ -158,6 +163,14 @@
       link="Link2" />
     <axis
       xyz="-0.998759127785777 0.0498016532315323 0" />
+
+    <limit
+        lower="-3.14"
+        upper="3.14"
+        effort="100"
+        velocity="2.0"/>
+
+    
     
   </joint>
   <link
@@ -200,7 +213,7 @@
   </link>
   <joint
     name="Joint3"
-    type="continuous">
+    type="revolute">
     <origin
       xyz="0.0150729083014778 -0.149509002764561 0.330901216092781"
       rpy="0 0 0" />
@@ -210,6 +223,11 @@
       link="Link3" />
     <axis
       xyz="-0.998759127785812 0.0498016532308395 0" />
+    <limit
+        lower="-3.14"
+        upper="3.14"
+        effort="100"
+        velocity="2.0"/>
   </joint>
   <link
     name="Link4">
@@ -258,7 +276,7 @@
   </joint>
   <joint
     name="Joint4"
-    type="continuous">
+    type="revolute">
     <origin
       xyz="-0.0336807621063758 -0.173467508873688 0.177903552627862"
       rpy="0 0 0" />
@@ -268,6 +286,11 @@
       link="Link4" />
     <axis
       xyz="0.998759127785812 -0.0498016532308386 0" />
+    <limit
+        lower="-3.14"
+        upper="3.14"
+        effort="100"
+        velocity="2.0"/>
   </joint>
   <link
     name="Link5">
@@ -309,7 +332,7 @@
   </link>
   <joint
     name="Joint5"
-    type="continuous">
+    type="revolute">
     <origin
       xyz="0.141823796145833 -0.00707183594519112 0.0758294127267807"
       rpy="0 0 0" />
@@ -319,6 +342,11 @@
       link="Link5" />
     <axis
       xyz="0 0 -1" />
+    <limit
+        lower="-3.14"
+        upper="3.14"
+        effort="100"
+        velocity="2.0"/>
   </joint>
   <link
     name="Gripper">

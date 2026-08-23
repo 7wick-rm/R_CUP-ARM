@@ -18,7 +18,7 @@
   <model name="red_box2">
     <static>false</static>
     <link name="red_link2">
-      <pose>0.0 0.5 0.025 0 0 0</pose>
+      <pose>0.0 0.4 0.025 0 0 0</pose>
       <collision name="red_collision">
         <geometry>
           <box>

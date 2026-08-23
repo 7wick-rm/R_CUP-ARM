@@ -59,7 +59,7 @@ void MTCTaskNode::setupPlanningScene()
   object.primitives[0].dimensions = { 0.05, 0.05,0.05 };
 
   geometry_msgs::msg::Pose pose;
-  pose.position.x = 0.5;
+  pose.position.x = 0.4;
   pose.position.y = 0.0;
   pose.position.z= 0.025;
   pose.orientation.w = 1.0;
@@ -83,7 +83,7 @@ void MTCTaskNode::doTask()
     return;
   }
 
-  if (!task_.plan(2))
+  if (!task_.plan(4))
   {
     RCLCPP_ERROR_STREAM(LOGGER, "Task planning failed");
     return;
@@ -166,7 +166,7 @@ mtc::Task MTCTaskNode::createTask()
     stage->setMonitoredStage(current_state_ptr);
 
     Eigen::Isometry3d grasp_frame_transform = Eigen::Isometry3d::Identity();
-    grasp_frame_transform.translation().z() = 0.23;
+    grasp_frame_transform.translation().z() = 0.24;
     grasp_frame_transform.linear()=Eigen::AngleAxisd(M_PI,Eigen::Vector3d::UnitX()).toRotationMatrix();
 
 
@@ -270,7 +270,7 @@ mtc::Task MTCTaskNode::createTask()
 
       geometry_msgs::msg::PoseStamped place_pose;
       place_pose.header.frame_id    = "base_link";
-      place_pose.pose.position.x    =  -0.5;
+      place_pose.pose.position.x    =  -0.4;
       place_pose.pose.position.y    =  0.0;
       place_pose.pose.position.z    =  0.026;
       place_pose.pose.orientation.w =  1.0;
@@ -289,19 +289,6 @@ mtc::Task MTCTaskNode::createTask()
     }
 
 
-//   {
-//     auto stage = std::make_unique<mtc::stages::MoveRelative>("go down", cartesian_planner);
-//     stage->properties().configureInitFrom(mtc::Stage::PARENT, { "group" });
-//     stage->setMinMaxDistance(0, 0.024);
-//     stage->setIKFrame(hand_frame);
-//     stage->properties().set("marker_ns", "go down");
-
-//     geometry_msgs::msg::Vector3Stamped dir;
-//     dir.header.frame_id = "base_link";
-//     dir.vector.z = -1.0; 
-//     stage->setDirection(dir);
-//     place->insert(std::move(stage));
-// }
 
 
     {
@@ -328,28 +315,28 @@ mtc::Task MTCTaskNode::createTask()
       place->insert(std::move(stage));
     }
 
-    // {
-    //   auto stage = std::make_unique<mtc::stages::MoveRelative>("retreat", cartesian_planner);
-    //   stage->properties().configureInitFrom(mtc::Stage::PARENT, { "group" });
-    //   stage->setMinMaxDistance(0.0, 0.15);
-    //   stage->setIKFrame(hand_frame);
-    //   stage->properties().set("marker_ns", "retreat");
+    {
+      auto stage = std::make_unique<mtc::stages::MoveRelative>("retreat", cartesian_planner);
+      stage->properties().configureInitFrom(mtc::Stage::PARENT, { "group" });
+      stage->setMinMaxDistance(0.0, 0.15);
+      stage->setIKFrame(hand_frame);
+      stage->properties().set("marker_ns", "retreat");
 
-    //   geometry_msgs::msg::Vector3Stamped dir;
-    //   dir.header.frame_id = "base_link";
-    //   dir.vector.z = 1.0; 
-    //   stage->setDirection(dir);
-    //   place->insert(std::move(stage));
-    // }
+      geometry_msgs::msg::Vector3Stamped dir;
+      dir.header.frame_id = "base_link";
+      dir.vector.z = 1.0; 
+      stage->setDirection(dir);
+      place->insert(std::move(stage));
+    }
     task.add(std::move(place));
    }
   
-  {
-    auto stage = std::make_unique<mtc::stages::MoveTo>("return home", sampling_planner);
-    stage->properties().configureInitFrom(mtc::Stage::PARENT, { "group" });
-    stage->setGoal("home");
-    task.add(std::move(stage));
-  }
+  // {
+  //   auto stage = std::make_unique<mtc::stages::MoveTo>("return home", sampling_planner);
+  //   stage->properties().configureInitFrom(mtc::Stage::PARENT, { "group" });
+  //   stage->setGoal("home");
+  //   task.add(std::move(stage));
+  // }
 
 
 
