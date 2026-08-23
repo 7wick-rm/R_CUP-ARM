@@ -59,7 +59,7 @@ void MTCTaskNode::setupPlanningScene()
   object.primitives[0].dimensions = { 0.05, 0.05,0.05 };
 
   geometry_msgs::msg::Pose pose;
-  pose.position.x = 0.5;
+  pose.position.x = 0.4;
   pose.position.y = 0.0;
   pose.position.z= 0.025;
   pose.orientation.w = 1.0;
@@ -166,7 +166,7 @@ mtc::Task MTCTaskNode::createTask()
     stage->setMonitoredStage(current_state_ptr);
 
     Eigen::Isometry3d grasp_frame_transform = Eigen::Isometry3d::Identity();
-    grasp_frame_transform.translation().z() = 0.20;
+    grasp_frame_transform.translation().z() = 0.22;
     grasp_frame_transform.linear()=Eigen::AngleAxisd(M_PI,Eigen::Vector3d::UnitX()).toRotationMatrix();
 
 
