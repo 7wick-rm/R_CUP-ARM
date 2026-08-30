@@ -465,44 +465,6 @@ def generate_launch_description():
         ],
     )
 
-    point_cloud_processor = ComposableNodeContainer(
-            name='image_proc_container',
-            namespace='',
-            package='rclcpp_components',
-            executable='component_container',
-            composable_node_descriptions=[
-                ComposableNode(
-                    package='depth_image_proc',
-                    plugin='depth_image_proc::PointCloudXyzrgbNode',
-                    name='point_cloud_xyzrgb_node',
-                    remappings=[
-                        ('rgb/image_rect_color', '/rgbd_camera/image'),
-                        ('depth_registered/image_rect', '/rgbd_camera/depth_image'),
-                        ('rgb/camera_info', '/rgbd_camera/camera_info'),
-                        ('points', '/rgbd_camera/points')
-                    ],
-                    parameters=[{'use_sim_time': True}]
-                ),
-            ],
-            output='screen',
-        )
-
-    inference_node = Node(
-            package="gazebo_perception",
-            executable="inference_node",
-            name="inference_node",
-            output="screen",
-            parameters=[{"use_sim_time": True}]
-        )
-
-    pcl_node = Node(
-        package="pcl_geometry",
-        executable="pcl_geometry_node",
-        name="pcl_geometry_node",
-        output="screen",
-        parameters=[{"use_sim_time": True}]
-    )
-
     return LaunchDescription([
         # set_resource_path,
         # set_resource_path2,
@@ -533,8 +495,8 @@ def generate_launch_description():
         gazebo_station_relay,
         move_group_node,
         rviz_node,
-        point_cloud_processor,
-        inference_node,
-        pcl_node
+        # point_cloud_processor,
+        # inference_node,
+        # pcl_node
     ])
 
