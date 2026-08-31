@@ -91,12 +91,12 @@
       </inertial>
       <collision name="collision">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
       </collision>
       <visual name="visual">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
         <material>
           <ambient>0.1 0.8 0.1 1</ambient>
@@ -119,12 +119,12 @@
       </inertial>
       <collision name="collision">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
       </collision>
       <visual name="visual">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
         <material>
           <ambient>0.1 0.8 0.1 1</ambient>
@@ -134,7 +134,7 @@
     </link>
   </model>
 
-  <model name="lego_4x2_green3">
+  <!-- <model name="lego_4x2_green3">
     <static>false</static>
   <pose>0.25 -0.05 2.0 0 0 0</pose>
     <link name="link3">
@@ -147,12 +147,12 @@
       </inertial>
       <collision name="collision">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
       </collision>
       <visual name="visual">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
         <material>
           <ambient>0.1 0.8 0.1 1</ambient>
@@ -160,9 +160,9 @@
         </material>
       </visual>
     </link>
-  </model>
+  </model> -->
 
-  <model name="lego_2x2_green2">
+  <!-- <model name="lego_2x2_green2">
   <static>false</static>
   <pose>0.25 0.05 2.0 0 0 0</pose>
     <link name="link2">
@@ -175,12 +175,12 @@
       </inertial>
       <collision name="collision">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
       </collision>
       <visual name="visual">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
         <material>
           <ambient>0.1 0.8 0.1 1</ambient>
@@ -188,7 +188,7 @@
         </material>
       </visual>
     </link>
-  </model>
+  </model> -->
 
   <model name="lego_2x2_yellow1">
   <static>false</static>
@@ -203,12 +203,12 @@
       </inertial>
       <collision name="collision">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
       </collision>
       <visual name="visual">
         <geometry>
-          <mesh><uri>model://piper_bringup/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
         <material>
           <ambient>0.9 0.9 0.1 1</ambient>

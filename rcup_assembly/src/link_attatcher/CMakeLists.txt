@@ -41,9 +41,17 @@ target_link_libraries(link_attatcher_plugin
   ignition-common4::ignition-common4
 )
 
-rosidl_target_interfaces(link_attatcher_plugin
+# --- UPDATED SECTION START ---
+# Fetch the target name for the cpp typesupport
+rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} "rosidl_typesupport_cpp"
 )
+
+# Link the generated typesupport library to your plugin
+target_link_libraries(link_attatcher_plugin
+  "${cpp_typesupport_target}"
+)
+# --- UPDATED SECTION END ---
 
 install(
   TARGETS link_attatcher_plugin

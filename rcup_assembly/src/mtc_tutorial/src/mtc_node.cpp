@@ -5,8 +5,16 @@
 #include <moveit/task_constructor/solvers.h>
 #include <moveit/task_constructor/stages.h>
 #include "link_attatcher/srv/attach.hpp"
+#if __has_include(<tf2_geometry_msgs/tf2_geometry_msgs.hpp>)
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#else
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#endif
+#if __has_include(<tf2_eigen/tf2_eigen.hpp>)
 #include <tf2_eigen/tf2_eigen.hpp>
+#else
+#include <tf2_eigen/tf2_eigen.h>
+#endif
 #include <std_msgs/msg/empty.hpp>
 
 static const rclcpp::Logger LOGGER = rclcpp::get_logger("mtc_tutorial");
@@ -15,17 +23,17 @@ namespace mtc = moveit::task_constructor;
 class MTCTaskNode
 {
 public:
-  explicit MTCTaskNode(const rclcpp::NodeOptions& options);
+  MTCTaskNode(const rclcpp::NodeOptions& options);
 
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr getNodeBaseInterface();
 
-  void doTask(const std::string& object_id,const std::vector<std::double> & pose_position,const std::vector<std::double> & pose_orientation,const std::vector<std::string> & addingcollisions);
+  void doTask(const std::string& object_id,double place_x,double place_y,double place_z,const std::vector<std::string> & addingcollisions);
 
   void setupPlanningScene();
   void publishattatch(const std::string& model1_name,const std::string& link1_name,const std::string& model2_name,const std::string& link2_name);
 
 private:
-  mtc::Task createTask(const std::string& object_id,const std::vector<std::double> & pose_position,const std::vector<std::double> & pose_orientation,const std::vector<std::string> & addingcollisions);
+  mtc::Task createTask(const std::string& object_id,double place_x,double place_y,double place_z,const std::vector<std::string> & addingcollisions);
   mtc::Task task_;
   rclcpp::Node::SharedPtr node_;
 };
@@ -74,7 +82,7 @@ void MTCTaskNode::setupPlanningScene()
 
   moveit_msgs::msg::CollisionObject object3=object1;
   object3.id="block3";
-  object3.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
+  object2.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
 
   geometry_msgs::msg::Pose pose3;
   pose3.position.x=0.25;
@@ -130,9 +138,10 @@ void MTCTaskNode::publishattatch(const std::string& model1_name, const std::stri
 
 
 
-void MTCTaskNode::doTask(const std::string& object_id,const std::vector<std::double> & pose_position,const std::vector<std::double> & pose_orientation,const std::vector<std::string> & addingcollisions)
+void MTCTaskNode::doTask(const std::string& object_id,double place_x,double place_y,
+    double place_z,const std::vector<std::string> & addingcollisions)
 {
-  task_ = createTask(object_id,pose_position,pose_orientation,addingcollisions);
+  task_ = createTask(object_id,place_x,place_y,place_z,addingcollisions);
 
 
   try
@@ -167,7 +176,7 @@ void MTCTaskNode::doTask(const std::string& object_id,const std::vector<std::dou
 
 
 
-mtc::Task MTCTaskNode::createTask(const std::string& object_id,const std::vector<std::double> & pose_position,const std::vector<std::double> & pose_orientation,const std::vector<std::string> & addingcollisions){
+mtc::Task MTCTaskNode::createTask(const std::string& object_id,double place_x,double place_y,double place_z, const std::vector<std::string> & addingcollisions){
   mtc::Task task;
   task.stages()->setName("demo task");
   task.loadRobotModel(node_);
@@ -324,7 +333,10 @@ mtc::Task MTCTaskNode::createTask(const std::string& object_id,const std::vector
 
   geometry_msgs::msg::PoseStamped target_pose_msg;
   target_pose_msg.header.frame_id = "base_link";
-  for (auto &pose : )
+  target_pose_msg.pose.position.x=place_x;
+  target_pose_msg.pose.position.y = place_y;
+  target_pose_msg.pose.position.z = place_z; 
+  target_pose_msg.pose.orientation.w = 1.0;
   stage->setPose(target_pose_msg);
   stage->setMonitoredStage(attach_object_stage); 
 
@@ -417,6 +429,12 @@ mtc::Task MTCTaskNode::createTask(const std::string& object_id,const std::vector
   stage_open_hand->setGoal("closed");
   task.add(std::move(stage_open_hand));
 }
+
+
+
+
+
+
   return task;
 }
 
@@ -437,11 +455,12 @@ int main(int argc, char** argv)
   });
 
   mtc_task_node->setupPlanningScene();
+  // mtc_task_node->doTask("block1",0.05);
   mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-  mtc_task_node->publishattatch("lego_2x2_yellow","link1","lego_4x2_green","link3");
+  mtc_task_node->publishattatch("lego_2x2_yellow1","link1","lego_4x2_green4","link4");
   mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
   mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
-  mtc_task_node->publishattatch("lego_4x2_green","link3","lego_2x2_green","link2");
+  mtc_task_node->publishattatch("lego_4x2_green4","link4","lego_2x2_green5","link5");
   mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
   spin_thread->join();
   rclcpp::shutdown();
