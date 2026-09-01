@@ -78,10 +78,13 @@
     </model>
 
 
-  <model name="lego_2x2_green5">
+  <!-- ______________________________________BATTERY________________________________________ -->
+  
+  <!-- 
+  <model name="lego_2x2_blue">
     <static>false</static>
-  <pose>0.25 -0.1 2.0 0 0 0</pose>
-    <link name="link5">
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="b_link">
       <inertial>
         <mass>0.005</mass>
         <inertia>
@@ -99,73 +102,17 @@
           <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
         <material>
-          <ambient>0.1 0.8 0.1 1</ambient>
-          <diffuse>0.1 0.8 0.1 1</diffuse>
+          <ambient>0.047 0.349 0.8 1</ambient>
+          <diffuse>0.047 0.349 0.8 1</diffuse>
         </material>
       </visual>
     </link>
-  </model>
+  </model> 
 
-    <model name="lego_4x2_green4">
+  <model name="lego_2x2_yellow">
     <static>false</static>
-  <pose>0.25 0.1 2.0 0 0 0</pose>
-    <link name="link4">
-      <inertial>
-        <mass>0.010</mass>
-        <inertia>
-          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
-          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
-        </inertia>
-      </inertial>
-      <collision name="collision">
-        <geometry>
-          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
-        </geometry>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
-        </geometry>
-        <material>
-          <ambient>0.1 0.8 0.1 1</ambient>
-          <diffuse>0.1 0.8 0.1 1</diffuse>
-        </material>
-      </visual>
-    </link>
-  </model>
-
-  <!-- <model name="lego_4x2_green3">
-    <static>false</static>
-  <pose>0.25 -0.05 2.0 0 0 0</pose>
-    <link name="link3">
-      <inertial>
-        <mass>0.010</mass>
-        <inertia>
-          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
-          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
-        </inertia>
-      </inertial>
-      <collision name="collision">
-        <geometry>
-          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
-        </geometry>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
-        </geometry>
-        <material>
-          <ambient>0.1 0.8 0.1 1</ambient>
-          <diffuse>0.1 0.8 0.1 1</diffuse>
-        </material>
-      </visual>
-    </link>
-  </model> -->
-
-  <!-- <model name="lego_2x2_green2">
-  <static>false</static>
-  <pose>0.25 0.05 2.0 0 0 0</pose>
-    <link name="link2">
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="y_link">
       <inertial>
         <mass>0.005</mass>
         <inertia>
@@ -183,17 +130,138 @@
           <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
         <material>
-          <ambient>0.1 0.8 0.1 1</ambient>
-          <diffuse>0.1 0.8 0.1 1</diffuse>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
         </material>
       </visual>
     </link>
-  </model> -->
+  </model> 
+  -->
+ 
+
+  <!-- ______________________________________MAGNET________________________________________ -->
+  
+  <!-- 
+  <model name="lego_2x2_red">
+    <static>false</static>
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="r_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.631 0.008 0.008 1</ambient>
+          <diffuse>0.631 0.008 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+
+  <model name="lego_2x2_blue">
+    <static>false</static>
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="b_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.047 0.349 0.8 1</ambient>
+          <diffuse>0.047 0.349 0.8 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  -->
+
+  <!-- ______________________________________CARROT________________________________________ -->
+  
+  <!-- 
+  <model name="lego_2x2_green">
+    <static>false</static>
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="g_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_yellow2">
+    <static>false</static>
+    <pose>0.25 0.1 2.0 0 0 0</pose>
+    <link name="y_link2">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
 
   <model name="lego_2x2_yellow1">
-  <static>false</static>
-  <pose>0.25 0.0 2.0 0 0 0</pose>
-    <link name="link1">
+    <static>false</static>
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="y_link1">
       <inertial>
         <mass>0.005</mass>
         <inertia>
@@ -211,11 +279,857 @@
           <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
         </geometry>
         <material>
-          <ambient>0.9 0.9 0.1 1</ambient>
-          <diffuse>0.9 0.9 0.1 1</diffuse>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+  -->
+
+  <!-- ______________________________________TRAFFIC LIGHT________________________________________ -->
+  
+  <!-- 
+  <model name="lego_2x2_red">
+    <static>false</static>
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="r_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.631 0.008 0.008 1</ambient>
+          <diffuse>0.631 0.008 0.008 1</diffuse>
         </material>
       </visual>
     </link>
   </model>
+
+  <model name="lego_2x2_yellow">
+    <static>false</static>
+    <pose>0.25 0.1 2.0 0 0 0</pose>
+    <link name="y_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_green">
+    <static>false</static>
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="g_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+  -->
+
+  <!-- ______________________________________BIG CARROT________________________________________ -->
+
+  <!-- 
+  <model name="lego_2x2_green">
+    <static>false</static>
+    <pose>0.25 -0.2 2.0 0 0 0</pose>  
+    <link name="g_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  
+  <model name="lego_4x2_yellow">
+    <static>false</static>
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="y_link3">
+      <inertial>
+        <mass>0.010</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_yellow2">
+    <static>false</static>
+    <pose>0.25 0.1 2.0 0 0 0</pose>
+    <link name="y_link2">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_yellow1">
+    <static>false</static>
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="y_link1">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+  -->
+ 
+
+  <!-- ______________________________________ICE CREAM________________________________________ -->
+
+  <!-- 
+  <model name="lego_2x2_green">
+    <static>false</static>
+    <pose>0.25 -0.2 0.05 0 0 0</pose>  
+    <link name="g_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  
+  <model name="lego_2x2_blue">
+    <static>false</static>
+    <pose>0.25 0.1 0.05 0 0 0</pose>
+    <link name="b_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.047 0.349 0.8 1</ambient>
+          <diffuse>0.047 0.349 0.8 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_red">
+    <static>false</static>
+    <pose>0.25 -0.1 0.05 0 0 0</pose>
+    <link name="r_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.631 0.008 0.008 1</ambient>
+          <diffuse>0.631 0.008 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_4x2_yellow">
+    <static>false</static>
+    <pose>0.25 0.0 0.05 0 0 0</pose>
+    <link name="y_link2">
+      <inertial>
+        <mass>0.010</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+
+  <model name="lego_2x2_yellow">
+    <static>false</static>
+    <pose>0.25 0.2 0.05 0 0 0</pose>
+    <link name="y_link1">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>  
+  -->
+
+  <!-- ______________________________________E-STOP________________________________________ -->
+  
+  <!-- 
+  <model name="lego_4x2_yellow">
+    <static>false</static>
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="y_link">
+      <inertial>
+        <mass>0.010</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+
+  <model name="lego_2x2_red">
+    <static>false</static>
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="r_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.631 0.008 0.008 1</ambient>
+          <diffuse>0.631 0.008 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+  -->
+
+  <!-- ______________________________________SMALL TREE________________________________________ -->
+  
+  <!-- 
+  <model name="lego_2x2_green">
+    <static>false</static>
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="g_link1">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_4x2_green">
+    <static>false</static>
+    <pose>0.25 0.1 2.0 0 0 0</pose>
+    <link name="g_link2">
+      <inertial>
+        <mass>0.010</mass>
+        <inertia>
+          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_yellow">
+    <static>false</static>
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="y_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+  -->
+
+  <!-- ______________________________________HAMMER________________________________________ -->
+  
+  <!-- 
+  <model name="lego_4x2_blue">
+    <static>false</static>
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="b_link">
+      <inertial>
+        <mass>0.010</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.047 0.349 0.8 1</ambient>
+          <diffuse>0.047 0.349 0.8 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_red2">
+    <static>false</static>
+    <pose>0.25 0.1 2.0 0 0 0</pose>
+    <link name="r_link2">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.631 0.008 0.008 1</ambient>
+          <diffuse>0.631 0.008 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_red1">
+    <static>false</static>
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="r_link1">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.631 0.008 0.008 1</ambient>
+          <diffuse>0.631 0.008 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>  
+  -->
+
+  <!-- ______________________________________BURGER________________________________________ -->
+
+  <!--   
+  <model name="lego_4x2_yellow1">
+    <static>false</static>
+    <pose>0.25 0.1 2.0 0 0 0</pose>  
+    <link name="y_link1">
+      <inertial>
+        <mass>0.010</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  
+  <model name="lego_4x2_yellow2">
+    <static>false</static>
+    <pose>0.25 -0.1 2.0 0 0 0</pose>
+    <link name="y_link2">
+      <inertial>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_4x2_red">
+    <static>false</static>
+    <pose>0.25 -0.2 2.0 0 0 0</pose>
+    <link name="r_link1">
+      <inertial>
+        <mass>0.010</mass>
+        <inertia>
+          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.631 0.008 0.008 1</ambient>
+          <diffuse>0.631 0.008 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_red">
+    <static>false</static>
+    <pose>0.25 0.0 2.0 0 0 0</pose>
+    <link name="r_link2">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.631 0.008 0.008 1</ambient>
+          <diffuse>0.631 0.008 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+  -->
+
+  <!-- ______________________________________BIG TREE________________________________________ -->
+  
+  <model name="lego_2x2_yellow">
+    <static>false</static>
+    <pose>0.25 -0.2 0.05 0 0 0</pose>  
+    <link name="y_link">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+  
+  <model name="lego_2x2_green1">
+    <static>false</static>
+    <pose>0.25 0.1 0.05 0 0 0</pose>
+    <link name="g_link2">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_2x2_green2">
+    <static>false</static>
+    <pose>0.25 -0.1 0.05 0 0 0</pose>
+    <link name="g_link4">
+      <inertial>
+        <mass>0.005</mass>
+        <inertia>
+          <ixx>5.253e-6</ixx><iyy>1.5694e-5</iyy><izz>1.6441e-5</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/2x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <model name="lego_4x2_green2">
+    <static>false</static>
+    <pose>0.25 0.0 0.05 0 0 0</pose>
+    <link name="g_link3">
+      <inertial>
+        <mass>0.010</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model> 
+
+  <model name="lego_4x2_green1">
+    <static>false</static>
+    <pose>0.25 0.2 0.05 0 0 0</pose>
+    <link name="g_link1">
+      <inertial>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>2.802e-6</ixx><iyy>2.912e-6</iyy><izz>3.631e-6</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh><uri>model://piper_bringup/models/meshes/4x2_base_simplified.obj</uri><scale>1 1 1</scale></mesh>
+        </geometry>
+        <material>
+          <ambient>0.008 0.314 0.008 1</ambient>
+          <diffuse>0.008 0.314 0.008 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>  
+ 
+
   </world>
 </sdf>

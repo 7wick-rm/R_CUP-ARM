@@ -52,47 +52,172 @@ void MTCTaskNode::setupPlanningScene()
 
   std::vector<moveit_msgs::msg::CollisionObject> objects; 
 
+  // ___________________________ICE CREAM________________________________
+  // moveit_msgs::msg::CollisionObject object1;
+  // object1.id = "block1";
+  // object1.header.frame_id = "base_link";
+  // object1.primitives.resize(1);
+  // object1.primitives[0].type = shape_msgs::msg::SolidPrimitive::BOX;
+  // object1.primitives[0].dimensions = { 0.063, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose;
+  // pose.position.x = 0.25;
+  // pose.position.y = 0.0;
+  // pose.position.z = 0.012;   
+  // pose.orientation.w = 1.0;
+  // object1.pose = pose;
+  // objects.push_back(object1);
+
+  // moveit_msgs::msg::CollisionObject object2=object1;
+  // object2.id="block2";
+  // object2.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose2;
+  // pose2.position.x=0.25;
+  // pose2.position.y=0.10;
+  // pose2.position.z=0.012;
+  // pose2.orientation.w=1.0;
+  // object2.pose=pose2;
+  // objects.push_back(object2);
+
+  // moveit_msgs::msg::CollisionObject object3=object1;
+  // object3.id="block3";
+  // object3.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose3;
+  // pose3.position.x=0.25;
+  // pose3.position.y=-0.10;
+  // pose3.position.z=0.012;
+  // pose3.orientation.w=1.0;
+  // object3.pose=pose3;
+  // objects.push_back(object3);
+
+  // moveit_msgs::msg::CollisionObject object4=object1;
+  // object4.id="block4";
+  // object4.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose4;
+  // pose4.position.x=0.25;
+  // pose4.position.y=-0.20;
+  // pose4.position.z=0.012;
+  // pose4.orientation.w=1.0;
+  // object4.pose=pose4;
+  // objects.push_back(object4);
+
+  // moveit_msgs::msg::CollisionObject object5=object1;
+  // object5.id="block5";
+  // object5.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose5;
+  // pose5.position.x=0.25;
+  // pose5.position.y=0.20;
+  // pose5.position.z=0.012;
+  // pose5.orientation.w=1.0;
+  // object5.pose=pose5;
+  // objects.push_back(object5);
+
+
+  // ___________________________BURGER________________________________
+  // moveit_msgs::msg::CollisionObject object1;
+  // object1.id = "block1";
+  // object1.header.frame_id = "base_link";
+  // object1.primitives.resize(1);
+  // object1.primitives[0].type = shape_msgs::msg::SolidPrimitive::BOX;
+  // object1.primitives[0].dimensions = { 0.063, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose;
+  // pose.position.x = 0.25;
+  // pose.position.y = -0.2;
+  // pose.position.z = 0.012;   
+  // pose.orientation.w = 1.0;
+  // object1.pose = pose;
+  // objects.push_back(object1);
+
+  // moveit_msgs::msg::CollisionObject object2=object1;
+  // object2.id="block2";
+  // object2.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose2;
+  // pose2.position.x=0.25;
+  // pose2.position.y=0.0;
+  // pose2.position.z=0.012;
+  // pose2.orientation.w=1.0;
+  // object2.pose=pose2;
+  // objects.push_back(object2);
+
+  // moveit_msgs::msg::CollisionObject object3=object1;
+  // object3.id="block3";
+  // object3.primitives[0].dimensions = { 0.063, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose3;
+  // pose3.position.x=0.25;
+  // pose3.position.y=-0.10;
+  // pose3.position.z=0.012;
+  // pose3.orientation.w=1.0;
+  // object3.pose=pose3;
+  // objects.push_back(object3);
+
+  // moveit_msgs::msg::CollisionObject object4=object1;
+  // object4.id="block4";
+  // object4.primitives[0].dimensions = { 0.063, 0.0317,0.024};
+  // geometry_msgs::msg::Pose pose4;
+  // pose4.position.x=0.25;
+  // pose4.position.y=0.10;
+  // pose4.position.z=0.012;
+  // pose4.orientation.w=1.0;
+  // object4.pose=pose4;
+  // objects.push_back(object4);
+
+  // ___________________________BIG TREE________________________________
   moveit_msgs::msg::CollisionObject object1;
   object1.id = "block1";
   object1.header.frame_id = "base_link";
   object1.primitives.resize(1);
   object1.primitives[0].type = shape_msgs::msg::SolidPrimitive::BOX;
-  object1.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-
+  object1.primitives[0].dimensions = { 0.063, 0.0317,0.024};
   geometry_msgs::msg::Pose pose;
   pose.position.x = 0.25;
-  pose.position.y = 0.0;
+  pose.position.y = 0.2;
   pose.position.z = 0.012;   
   pose.orientation.w = 1.0;
   object1.pose = pose;
-
   objects.push_back(object1);
 
   moveit_msgs::msg::CollisionObject object2=object1;
   object2.id="block2";
-  object2.primitives[0].dimensions = { 0.063, 0.0317,0.024};
+  object2.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
   geometry_msgs::msg::Pose pose2;
   pose2.position.x=0.25;
   pose2.position.y=0.10;
   pose2.position.z=0.012;
   pose2.orientation.w=1.0;
   object2.pose=pose2;
-
   objects.push_back(object2);
 
   moveit_msgs::msg::CollisionObject object3=object1;
   object3.id="block3";
-  object2.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-
+  object3.primitives[0].dimensions = { 0.063, 0.0317,0.024};
   geometry_msgs::msg::Pose pose3;
   pose3.position.x=0.25;
-  pose3.position.y=-0.10;
+  pose3.position.y=0.0;
   pose3.position.z=0.012;
   pose3.orientation.w=1.0;
   object3.pose=pose3;
-
   objects.push_back(object3);
 
+  moveit_msgs::msg::CollisionObject object4=object1;
+  object4.id="block4";
+  object4.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
+  geometry_msgs::msg::Pose pose4;
+  pose4.position.x=0.25;
+  pose4.position.y=-0.10;
+  pose4.position.z=0.012;
+  pose4.orientation.w=1.0;
+  object4.pose=pose4;
+  objects.push_back(object4);
+
+  moveit_msgs::msg::CollisionObject object5=object1;
+  object5.id="block5";
+  object5.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
+  geometry_msgs::msg::Pose pose5;
+  pose5.position.x=0.25;
+  pose5.position.y=-0.20;
+  pose5.position.z=0.012;
+  pose5.orientation.w=1.0;
+  object5.pose=pose5;
+  objects.push_back(object5);
 
 
   moveit::planning_interface::PlanningSceneInterface psi;
@@ -429,12 +554,6 @@ mtc::Task MTCTaskNode::createTask(const std::string& object_id,double place_x,do
   stage_open_hand->setGoal("closed");
   task.add(std::move(stage_open_hand));
 }
-
-
-
-
-
-
   return task;
 }
 
@@ -455,13 +574,95 @@ int main(int argc, char** argv)
   });
 
   mtc_task_node->setupPlanningScene();
-  // mtc_task_node->doTask("block1",0.05);
-  mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-  mtc_task_node->publishattatch("lego_2x2_yellow1","link1","lego_4x2_green4","link4");
-  mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
-  mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
-  mtc_task_node->publishattatch("lego_4x2_green4","link4","lego_2x2_green5","link5");
-  mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
+
+  // BATTERY
+  // mtc_task_node->doTask("block2",0.25,-0.1,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_2x2_blue","b_link","lego_2x2_yellow","y_link");
+  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
+
+  // // MAGNET
+  // mtc_task_node->doTask("block2",0.25,-0.1,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_2x2_red","r_link","lego_2x2_blue","b_link");
+  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
+
+  // // CARROT
+  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_2x2_yellow1","y_link1","lego_2x2_yellow2","y_link2");
+  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
+  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
+  // mtc_task_node->publishattatch("lego_2x2_yellow2","y_link2","lego_2x2_green","g_link");
+  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
+
+  // // TRAFFIC LIGHT
+  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_2x2_green","g_link","lego_2x2_yellow","y_link");
+  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
+  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
+  // mtc_task_node->publishattatch("lego_2x2_yellow","y_link","lego_2x2_red","r_link");
+  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
+
+  // BIG CARROT
+  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_2x2_yellow1","y_link1","lego_2x2_yellow2","y_link2");
+  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
+  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
+  // mtc_task_node->publishattatch("lego_2x2_yellow2","y_link2","lego_4x2_yellow","y_link3");
+  // mtc_task_node->doTask("block4",0.25,0.1,0.087,{"block4","block3","block2","block1"});
+  // mtc_task_node->publishattatch("lego_4x2_yellow","y_link3","lego_2x2_green","g_link");
+  // mtc_task_node->doTask("block4",0.25,0.0,0.087,{"block4","block3","block2","block1"});
+
+  // ICE CREAM
+  // mtc_task_node->doTask("block2",0.233,0.0,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_4x2_yellow","y_link2","lego_2x2_blue","b_link");
+  // mtc_task_node->doTask("block3",0.267,0.0,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_4x2_yellow","y_link2","lego_2x2_red","r_link");
+  // mtc_task_node->doTask("block2",0.234,0.2,0.063,{"block3","block2","block1","block5"});
+  // mtc_task_node->publishattatch("lego_2x2_yellow","y_link1","lego_4x2_yellow","y_link2");
+  // mtc_task_node->doTask("block4",0.25,0.2,0.087,{"block4","block3","block2","block1","block5"});
+  // mtc_task_node->publishattatch("lego_2x2_red","r_link","lego_2x2_green","g_link");
+  // mtc_task_node->doTask("block4",0.25,0.0,0.087,{"block4","block3","block2","block1","block5"});
+
+  // E-STOP
+  // mtc_task_node->doTask("block2",0.25,-0.1,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_4x2_yellow","y_link","lego_2x2_red","r_link");
+  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
+
+  // // SMALL TREE
+  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_2x2_yellow","y_link","lego_4x2_green","g_link");
+  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
+  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
+  // mtc_task_node->publishattatch("lego_4x2_green","g_link1","lego_2x2_green","g_link2");
+  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
+
+  // // HAMMER
+  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_2x2_red1","r_link1","lego_2x2_red2","r_link2");
+  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
+  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
+  // mtc_task_node->publishattatch("lego_2x2_red2","r_link2","lego_4x2_blue","b_link");
+  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
+
+  // BURGER
+  // mtc_task_node->doTask("block2",0.2975,-0.2,0.012,{"block1"});
+  // mtc_task_node->doTask("block3",0.2658,-0.2,0.039,{"block1"});
+  // mtc_task_node->publishattatch("lego_2x2_red","r_link2","lego_4x2_yellow2","y_link2");
+  // mtc_task_node->publishattatch("lego_4x2_red","r_link1","lego_4x2_yellow2","y_link2");
+  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1","block4"});
+  // mtc_task_node->publishattatch("lego_4x2_yellow1","y_link1","lego_4x2_red","r_link1");
+  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block4","block3","block2","block1"});
+
+  // BIG TREE
+  mtc_task_node->doTask("block2",0.299,0.2,0.012,{"block1"});
+  mtc_task_node->doTask("block3",0.2658,0.2,0.039,{"block1","block2","block3"});
+  mtc_task_node->publishattatch("lego_4x2_green1","g_link1","lego_4x2_green2","g_link3");
+  mtc_task_node->publishattatch("lego_2x2_green1","g_link2","lego_4x2_green2","g_link3");
+  mtc_task_node->doTask("block3",0.25,-0.2,0.063,{"block3","block2","block1","block5"});
+  mtc_task_node->publishattatch("lego_2x2_yellow","y_link","lego_4x2_green1","g_link1");
+  mtc_task_node->doTask("block4",0.25,-0.2,0.092,{"block4","block3","block2","block1","block5"});
+  mtc_task_node->publishattatch("lego_4x2_green2","g_link3","lego_2x2_green2","g_link4");
+  mtc_task_node->doTask("block4",0.25,0.0,0.087,{"block4","block3","block2","block1","block5"});  
+
   spin_thread->join();
   rclcpp::shutdown();
   return 0;
