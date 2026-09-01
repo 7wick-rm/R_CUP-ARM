@@ -1,3 +1,22 @@
+"""
+Temporary Arm Executor Node -- SML EAI Workshop
+================================================
+Scope: FETCH_BLOCK only pick block from s_top shelf, place on bot base.
+       All other PlanStep types are skipped.
+
+Subscribes to:
+  /planned_task  (sml_messages/PlannedTask)
+
+Action Client:
+  /arm_command   (sml_messages/action/ArmCommand)
+  -- one goal now carries a FULL pick+place cycle (pick_x/y/z + place_x/y/z
+     + object_id), matching the MTC action server's per-block task.
+
+Hardcoded coords (update before physical testing):
+  SHELF_SLOTS -- 3 positions on s_top where blocks sit
+  BASE_SLOTS -- 3 positions on bot base where blocks are placed
+"""
+
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
@@ -7,20 +26,32 @@ import threading
 from sml_messages.msg import PlannedTask, PlanStep
 from sml_messages.action import ArmCommand
 
+
+# ---------------------------------------------------------------------------
+# Hardcoded coordinates -- carried over from the original mtc_node2.cpp
+# BLOCKS list (object_red, object_green, object_blue), same order.
+# 3 block slots on s_top shelf (x, y, z)
+# ---------------------------------------------------------------------------
 SHELF_SLOTS = [
     (0.40, -0.44, 0.09),   # slot 0 = object_red  pick pose
     (0.50, -0.40, 0.09),   # slot 1 = object_green pick pose
     (0.60, -0.48, 0.09),   # slot 2 = object_blue pick pose
 ]
 
+# 3 positions on bot base where blocks are placed (x, y, z)
 BASE_SLOTS = [
     (0.50, -0.86, 0.20),   # base slot 0 = object_red  place pose
     (0.50, -0.76, 0.20),   # base slot 1 = object_green place pose
     (0.50, -0.96, 0.20),   # base slot 2 = object_blue place pose
 ]
 
-ACTION_TIMEOUT = 160.0 
+ACTION_TIMEOUT = 160.0   # seconds -- real MTC plan+execute for one block can take 1-2+ minutes;
+                         # this must comfortably exceed your worst-case single-block cycle time
 
+
+# ---------------------------------------------------------------------------
+# Node
+# ---------------------------------------------------------------------------
 class TempArmExecutorNode(Node):
 
     def __init__(self):
@@ -45,6 +76,9 @@ class TempArmExecutorNode(Node):
 
         self.get_logger().info('TempArmExecutorNode started. Waiting for /planned_task ...')
 
+    # -----------------------------------------------------------------------
+    # Callback
+    # -----------------------------------------------------------------------
     def _on_planned_task(self, msg: PlannedTask):
         if not msg.steps:
             self.get_logger().warn('Received PlannedTask with no steps.')
@@ -59,8 +93,12 @@ class TempArmExecutorNode(Node):
         )
         thread.start()
 
+    # -----------------------------------------------------------------------
+    # Walk steps only handle FETCH_BLOCK, skip everything else
+    # -----------------------------------------------------------------------
     def _execute_steps(self, steps: list[PlanStep]):
-        fetch_count = 0   # tracks which shelf/base slot to use
+        fetch_count = 0   # tracks which shelf/base slot to use                     #  REMOVE THIS NO NEED IN FINAL EXECUTOR FILE
+    
 
         for i, step in enumerate(steps):
             if step.action != PlanStep.FETCH_BLOCK:
@@ -101,6 +139,9 @@ class TempArmExecutorNode(Node):
 
         self.get_logger().info(f'Done. Fetched {fetch_count} block(s).')
 
+    # -----------------------------------------------------------------------
+    # Send one combined pick+place goal and wait for result
+    # -----------------------------------------------------------------------
     def _send_arm_goal(self, pick: tuple, place: tuple, object_id: str) -> bool:
         if not self.arm_client.wait_for_server(timeout_sec=5.0):
             self.get_logger().error('/arm_command action server not available.')
@@ -141,9 +182,16 @@ class TempArmExecutorNode(Node):
 
         return result_future.result().result.success
 
+    # -----------------------------------------------------------------------
+    # Feedback
+    # -----------------------------------------------------------------------
     def _feedback_cb(self, feedback_msg):
         self.get_logger().info(f'  [arm] {feedback_msg.feedback.status}')
 
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
 def main(args=None):
     rclpy.init(args=args)
     node = TempArmExecutorNode()

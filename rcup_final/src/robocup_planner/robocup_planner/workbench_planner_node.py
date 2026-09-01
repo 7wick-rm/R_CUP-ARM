@@ -1,3 +1,38 @@
+"""
+Workbench Planner Node -- SML EAI Workshop
+----------------------------------------------------------
+Assumes all required blocks are already ON the workbench table
+(delivered by the warehouse robot).
+
+Subscribes to:
+  /planned_task           (sml_messages/Task)       -- which product to build + order_type
+  /workbench_block_poses  (std_msgs/String, JSON)   -- block positions on workbench table
+                                                      FORMAT (temporary, to update later):
+                                                      [{"block_type": 3, "x": 0.32, "y": 0.15, "z": 0.0}, ...]
+
+Publishes to:
+  /arm/command            (std_msgs/String, JSON)   -- pick/place commands to workbench arm
+                                                      FORMAT:
+                                                      {"action": "pick"|"place",
+                                                       "block_type": 3,
+                                                       "x": 0.32, "y": 0.15, "z": 0.0,
+                                                       "label": "pick block_type3 from table"}
+
+Logic (PRODUCE):
+  1. Receive /planned_task -> decode product_id -> get required block sequence bottom->top
+  2. Receive /workbench_block_poses -> know where each block_type is on table
+  3. Build UP problem: pick each block from its table position, place at stack position
+     in correct order (bottom first, enforced by stacking precondition)
+  4. Solve -> publish arm commands step by step
+
+Logic (RECYCLE):
+  Reverse: unstack blocks top->bottom, place back on table at their original positions.
+
+Dependencies:
+  pip install unified-planning up-pyperplan
+  ROS2 with sml_messages built in workspace
+"""
+
 import json
 import rclpy
 from rclpy.node import Node
@@ -14,6 +49,12 @@ from unified_planning.model import Object
 # Suppress UP credits noise
 up.environment.get_environment().credits_stream = None
 
+
+# ---------------------------------------------------------------------------
+# Fixed stack positions on the workbench (x, y, z)
+# z increments by BLOCK_HEIGHT for each layer
+# Adjust x, y to match your physical workbench centre point
+# ---------------------------------------------------------------------------
 STACK_BASE_X   = 0.50
 STACK_BASE_Y   = 0.50
 BLOCK_HEIGHT   = 0.05   # metres -- height of one block
@@ -22,9 +63,18 @@ def stack_position(layer_index: int) -> tuple:
     """layer_index 0 = bottom, 1 = middle, 2 = top, etc."""
     return (STACK_BASE_X, STACK_BASE_Y, layer_index * BLOCK_HEIGHT)
 
+
+# ---------------------------------------------------------------------------
+# Decode product_id into ordered block type list (bottom -> top)
+# e.g. 341 -> [3, 4, 1]
+# ---------------------------------------------------------------------------
 def decode_product(product_id: int) -> list[int]:
     return [int(d) for d in str(product_id)]
 
+
+# ---------------------------------------------------------------------------
+# Node
+# ---------------------------------------------------------------------------
 class WorkbenchPlannerNode(Node):
 
     def __init__(self):
@@ -48,6 +98,9 @@ class WorkbenchPlannerNode(Node):
 
         self.get_logger().info('WorkbenchPlannerNode started.')
 
+    # -----------------------------------------------------------------------
+    # Callback: new planned task from Task Planner
+    # -----------------------------------------------------------------------
     def _on_task(self, msg: Task):
         if not msg.order_list:
             self.get_logger().warn('Received empty order list.')
@@ -61,6 +114,10 @@ class WorkbenchPlannerNode(Node):
         )
         self._try_plan()
 
+    # -----------------------------------------------------------------------
+    # Callback: block positions on workbench table from perception
+    # Temporary format: JSON string list of {block_type, x, y, z}
+    # -----------------------------------------------------------------------
     def _on_block_poses(self, msg: String):
         try:
             self.block_poses = json.loads(msg.data)
@@ -71,6 +128,9 @@ class WorkbenchPlannerNode(Node):
         except json.JSONDecodeError as e:
             self.get_logger().error(f'Failed to parse block poses JSON: {e}')
 
+    # -----------------------------------------------------------------------
+    # Attempt planning only when both order and block poses are available
+    # -----------------------------------------------------------------------
     def _try_plan(self):
         if self.current_order is None:
             self.get_logger().info('Waiting for /planned_task ...')
@@ -92,6 +152,8 @@ class WorkbenchPlannerNode(Node):
                 )
                 return
 
+        # Build pose lookup: block_type -> {x, y, z}
+        # (assumes one of each type on table -- extend if duplicates needed)
         pose_map: dict[int, dict] = {}
         for b in self.block_poses:
             pose_map[b['block_type']] = {'x': b['x'], 'y': b['y'], 'z': b['z']}
@@ -119,6 +181,24 @@ class WorkbenchPlannerNode(Node):
         self.current_order = None
         self.block_poses = []
 
+    # -----------------------------------------------------------------------
+    # PRODUCE: pick each block from table, place on stack in correct order
+    #
+    # UP Problem:
+    #   Fluents:
+    #     block_on_table(block) - block is at its table position
+    #     block_stacked(block) - block has been placed in stack
+    #     arm_free - single arm mutex
+    #     layer_ready(layer) - layer below is already stacked (ordering)
+    #
+    #   Actions:
+    #     pick(block) -> pre: block_on_table + arm_free
+    #                    eff: arm holding block, not on table
+    #     place(block,layer) -> pre: arm_holding + layer_ready(this_layer)
+    #                           eff: block_stacked, layer_ready(next_layer), arm_free
+    #
+    #   Goal: all blocks stacked
+    # -----------------------------------------------------------------------
     def _solve_produce(
         self,
         sequence: list[int],        # block types bottom -> top
@@ -181,11 +261,15 @@ class WorkbenchPlannerNode(Node):
         # Layer 0 (bottom) is always ready to receive
         problem.set_initial_value(layer_ready(layer_objs[0]), True)
 
+        # Per-layer place actions -- each action is locked to EXACTLY one block type.
+        # This prevents pyperplan from placing the wrong block at a layer.
+        # No block parameter-- the specific block object is hardcoded in precondition.
         problem.actions.clear()
         problem.add_action(pick)   # pick stays generic
 
         for i, bt in enumerate(sequence):
             block_obj  = block_objs[f'block_type{bt}']
+            # place_layerN_typeM: no parameters, fully grounded
             place_i = InstantaneousAction(f'place_layer{i}_type{bt}')
             place_i.add_precondition(arm_holding(block_obj))     # ONLY this block
             place_i.add_precondition(layer_ready(layer_objs[i])) # ONLY when layer ready
@@ -208,7 +292,12 @@ class WorkbenchPlannerNode(Node):
 
         # Convert UP actions -> arm commands
         return self._produce_actions_to_commands(up_plan, sequence, pose_map)
-    
+
+    # -----------------------------------------------------------------------
+    # RECYCLE: unstack blocks top->bottom, return to table positions
+    #
+    # Reverse of produce -- top block first, then work downward.
+    # -----------------------------------------------------------------------
     def _solve_recycle(
         self,
         sequence: list[int],
@@ -248,6 +337,9 @@ class WorkbenchPlannerNode(Node):
         top = len(sequence) - 1
         problem.set_initial_value(layer_clear(layer_objs[top]), True)
 
+        # Per-layer unstack actions -- fully grounded (no block parameter)
+        # Each action is locked to the EXACT block at that layer.
+        # return_to_table also grounded per block for same reason.
         for i in reversed(range(len(sequence))):
             bt = sequence[i]
             block_obj = block_objs[f'block_type{bt}']
@@ -277,6 +369,8 @@ class WorkbenchPlannerNode(Node):
         for bt in sequence:
             problem.add_goal(block_on_table(block_objs[f'block_type{bt}']))
 
+        # Build lookup: action_name -> (layer_idx, block_type)
+        # This avoids any string parsing bugs in command converter
         action_meta = {}
         for i, bt in enumerate(sequence):
             action_meta[f'unstack_layer{i}_type{bt}'] = ('unstack', i, bt)
@@ -289,6 +383,9 @@ class WorkbenchPlannerNode(Node):
 
         return self._recycle_actions_to_commands(up_plan, action_meta, pose_map)
 
+    # -----------------------------------------------------------------------
+    # Run UP solver (pyperplan)
+    # -----------------------------------------------------------------------
     def _run_solver(self, problem: Problem) -> list | None:
         try:
             with OneshotPlanner(name='pyperplan') as planner:
@@ -302,6 +399,9 @@ class WorkbenchPlannerNode(Node):
             self.get_logger().error(f'Solver error: {e}')
             return None
 
+    # -----------------------------------------------------------------------
+    # Convert PRODUCE UP actions -> arm command dicts
+    # -----------------------------------------------------------------------
     def _produce_actions_to_commands(
         self,
         up_actions: list,
@@ -327,10 +427,11 @@ class WorkbenchPlannerNode(Node):
                 })
 
             elif name.startswith('place_layer'):
+                # name format: place_layerN_typeM  (no params -- fully grounded)
                 parts = name.split('_')                         # ['place', 'layerN', 'typeM']
                 layer_idx = int(parts[1].replace('layer', ''))
                 bt = int(parts[2].replace('type', ''))
-                params = []                                     
+                params = []                                     # no parameters in grounded action
                 target = stack_position(layer_idx)
                 commands.append({
                     'action': 'place',
@@ -342,10 +443,13 @@ class WorkbenchPlannerNode(Node):
 
         return commands
 
+    # -----------------------------------------------------------------------
+    # Convert RECYCLE UP actions -> arm command dicts
+    # -----------------------------------------------------------------------
     def _recycle_actions_to_commands(
         self,
         up_actions: list,
-        action_meta: dict,   
+        action_meta: dict,   # action_name -> ('unstack'|'return', layer_idx, block_type)
         pose_map: dict[int, dict]
     ) -> list[dict]:
         commands = []
@@ -377,11 +481,18 @@ class WorkbenchPlannerNode(Node):
 
         return commands
 
+    # -----------------------------------------------------------------------
+    # Publish one arm command as JSON string
+    # -----------------------------------------------------------------------
     def _publish_command(self, cmd: dict):
         msg = String()
         msg.data = json.dumps(cmd)
         self.arm_pub.publish(msg)
 
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
 def main(args=None):
     rclpy.init(args=args)
     node = WorkbenchPlannerNode()
