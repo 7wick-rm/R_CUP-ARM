@@ -26,12 +26,21 @@ def generate_launch_description():
         description="Path to robot urdf file"
     )
 
-    world_name_arg = DeclareLaunchArgument(name="world_name", default_value="empty_world")
+    # Pass the same value to both launch files, e.g.:
+    #   ros2 launch piper_bringup gazebo_launch.py object_name:=ice_cream
+    #   ros2 launch mtc_tutorial pickplace_launch.py object_name:=ice_cream
+    object_name_arg = DeclareLaunchArgument(
+        name="object_name",
+        default_value="burger",
+        description="Which object's world to load (worlds/<object_name>.sdf must exist in "
+                     "piper_bringup), e.g. burger, ice_cream, battery, magnet, carrot, "
+                     "traffic_light, big_carrot, e_stop, small_tree, hammer, big_tree."
+    )
 
     world_path = PathJoinSubstitution([
             piper_world,
             "worlds",
-            PythonExpression(expression=["'", LaunchConfiguration("world_name"), "'", " + '.sdf'"])
+            PythonExpression(expression=["'", LaunchConfiguration("object_name"), "'", " + '.sdf'"])
         ]
     )
 
@@ -178,7 +187,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         model_arg,
-        world_name_arg,
+        object_name_arg,
         gazebo_resource_path,
         robot_state_publisher_node,
         gazebo,

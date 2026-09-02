@@ -16,6 +16,13 @@
 #include <tf2_eigen/tf2_eigen.h>
 #endif
 #include <std_msgs/msg/empty.hpp>
+#include <ament_index_cpp/get_package_share_directory.hpp>
+#include <yaml-cpp/yaml.h>
+
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include <algorithm>
 
 static const rclcpp::Logger LOGGER = rclcpp::get_logger("mtc_tutorial");
 namespace mtc = moveit::task_constructor;
@@ -29,14 +36,42 @@ public:
 
   void doTask(const std::string& object_id,double place_x,double place_y,double place_z,const std::vector<std::string> & addingcollisions);
 
+  // Builds the planning-scene collision objects for the currently selected object_name, using assembly_recipes.yaml.
   void setupPlanningScene();
+
+  // Physically welds two Gazebo models together via the link_attacher plugin.
   void publishattatch(const std::string& model1_name,const std::string& link1_name,const std::string& model2_name,const std::string& link2_name);
+
+  // Runs the full pick/place/weld/attach sequence for the currently selected object_name.
+  void runAssembly();
 
 private:
   mtc::Task createTask(const std::string& object_id,double place_x,double place_y,double place_z,const std::vector<std::string> & addingcollisions);
+
+  // Loads (and caches) assembly_recipes.yaml.
+  const YAML::Node& assemblyConfig();
+
+  // Groups 'a' and 'b' together (union-find)
+  void attachTogether(const std::string& a, const std::string& b);
+
+  // Union-find lookup: returns the current group representative for 'id'.
+  std::string groupOf(const std::string& id);
+
+  // After 'moved_id' has just been picked and placed (old_pose -> new_pose), applies the
+  // same rigid-body transform to every OTHER object currently in its group, keeping each
+  // one's own independent shape/id - this is what keeps welded-together pieces visually
+  // attached in RViz/the planning scene instead of one of them staying frozen behind.
+  void propagateGroupMotion(const std::string& moved_id,
+                             const geometry_msgs::msg::Pose& old_pose,
+                             const geometry_msgs::msg::Pose& new_pose);
+
   mtc::Task task_;
   rclcpp::Node::SharedPtr node_;
+  YAML::Node assembly_config_;
+  bool assembly_config_loaded_ = false;
+  std::unordered_map<std::string, std::string> group_parent_;
 };
+
 rclcpp::node_interfaces::NodeBaseInterface::SharedPtr MTCTaskNode::getNodeBaseInterface()
 {
   return node_->get_node_base_interface();
@@ -45,184 +80,164 @@ rclcpp::node_interfaces::NodeBaseInterface::SharedPtr MTCTaskNode::getNodeBaseIn
 MTCTaskNode::MTCTaskNode(const rclcpp::NodeOptions& options)
   : node_{ std::make_shared<rclcpp::Node>("mtc_node", options) }
 {
+  if (!node_->has_parameter("object_name"))
+  {
+    node_->declare_parameter<std::string>("object_name", "burger");
+  }
+  if (!node_->has_parameter("assembly_config_path"))
+  {
+    node_->declare_parameter<std::string>("assembly_config_path", "");
+  }
+}
+
+const YAML::Node& MTCTaskNode::assemblyConfig()
+{
+  if (!assembly_config_loaded_)
+  {
+    std::string path;
+    node_->get_parameter("assembly_config_path", path);
+    if (path.empty())
+    {
+      path = ament_index_cpp::get_package_share_directory("piper_moveit_config") +
+             "/config/assembly_recipes.yaml";
+    }
+    RCLCPP_INFO(node_->get_logger(), "Loading assembly recipes from '%s'", path.c_str());
+    assembly_config_ = YAML::LoadFile(path);
+    assembly_config_loaded_ = true;
+  }
+  return assembly_config_;
+}
+
+std::string MTCTaskNode::groupOf(const std::string& id)
+{
+  auto it = group_parent_.find(id);
+  if (it == group_parent_.end())
+  {
+    group_parent_[id] = id;
+    return id;
+  }
+  if (it->second != id)
+  {
+    it->second = groupOf(it->second);  // path compression
+  }
+  return it->second;
+}
+
+void MTCTaskNode::attachTogether(const std::string& a, const std::string& b)
+{
+  const std::string ra = groupOf(a);
+  const std::string rb = groupOf(b);
+  if (ra != rb)
+  {
+    group_parent_[rb] = ra;
+  }
+}
+
+void MTCTaskNode::propagateGroupMotion(const std::string& moved_id,
+                                        const geometry_msgs::msg::Pose& old_pose,
+                                        const geometry_msgs::msg::Pose& new_pose)
+{
+  const std::string root = groupOf(moved_id);
+
+  std::vector<std::string> members;
+  // Collect every id we've seen so far that belongs to the same group as moved_id,
+  // excluding moved_id itself (its own pose was already updated by the place stage).
+  for (const auto& kv : group_parent_)
+  {
+    if (kv.first != moved_id && groupOf(kv.first) == root)
+    {
+      members.push_back(kv.first);
+    }
+  }
+  if (members.empty())
+  {
+    return;
+  }
+
+  Eigen::Isometry3d old_tf, new_tf;
+  tf2::fromMsg(old_pose, old_tf);
+  tf2::fromMsg(new_pose, new_tf);
+  const Eigen::Isometry3d delta = new_tf * old_tf.inverse();
+
+  moveit::planning_interface::PlanningSceneInterface psi;
+  auto objs = psi.getObjects(members);
+
+  std::vector<moveit_msgs::msg::CollisionObject> updates;
+  for (const auto& id : members)
+  {
+    auto it = objs.find(id);
+    if (it == objs.end())
+    {
+      continue;  // not yet in the scene (e.g. never staged) - nothing to move
+    }
+    moveit_msgs::msg::CollisionObject obj = it->second;
+
+    Eigen::Isometry3d cur_tf;
+    tf2::fromMsg(obj.pose, cur_tf);
+    const Eigen::Isometry3d moved_tf = delta * cur_tf;
+
+    obj.pose = tf2::toMsg(moved_tf);
+    obj.operation = moveit_msgs::msg::CollisionObject::MOVE;
+    updates.push_back(obj);
+  }
+
+  if (!updates.empty())
+  {
+    psi.applyCollisionObjects(updates);
+    RCLCPP_INFO(node_->get_logger(), "Dragged %zu attached piece(s) along with '%s'",
+                updates.size(), moved_id.c_str());
+  }
 }
 
 void MTCTaskNode::setupPlanningScene()
 {
+  std::string object_name;
+  node_->get_parameter("object_name", object_name);
 
-  std::vector<moveit_msgs::msg::CollisionObject> objects; 
+  const YAML::Node& config = assemblyConfig();
+  YAML::Node objects_node = config["objects"];
+  if (!objects_node[object_name])
+  {
+    RCLCPP_ERROR(node_->get_logger(),
+                 "No assembly recipe found for object_name='%s' in assembly_recipes.yaml. "
+                 "Check the 'objects' map in that file for the available names.",
+                 object_name.c_str());
+    return;
+  }
 
-  // ___________________________ICE CREAM________________________________
-  // moveit_msgs::msg::CollisionObject object1;
-  // object1.id = "block1";
-  // object1.header.frame_id = "base_link";
-  // object1.primitives.resize(1);
-  // object1.primitives[0].type = shape_msgs::msg::SolidPrimitive::BOX;
-  // object1.primitives[0].dimensions = { 0.063, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose;
-  // pose.position.x = 0.25;
-  // pose.position.y = 0.0;
-  // pose.position.z = 0.012;   
-  // pose.orientation.w = 1.0;
-  // object1.pose = pose;
-  // objects.push_back(object1);
+  YAML::Node blocks = objects_node[object_name]["blocks"];
+  std::vector<moveit_msgs::msg::CollisionObject> objects;
 
-  // moveit_msgs::msg::CollisionObject object2=object1;
-  // object2.id="block2";
-  // object2.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose2;
-  // pose2.position.x=0.25;
-  // pose2.position.y=0.10;
-  // pose2.position.z=0.012;
-  // pose2.orientation.w=1.0;
-  // object2.pose=pose2;
-  // objects.push_back(object2);
+  for (const auto& entry : blocks)
+  {
+    const std::string id = entry.first.as<std::string>();
+    const YAML::Node& b = entry.second;
+    const auto dims = b["dims"].as<std::vector<double>>();
 
-  // moveit_msgs::msg::CollisionObject object3=object1;
-  // object3.id="block3";
-  // object3.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose3;
-  // pose3.position.x=0.25;
-  // pose3.position.y=-0.10;
-  // pose3.position.z=0.012;
-  // pose3.orientation.w=1.0;
-  // object3.pose=pose3;
-  // objects.push_back(object3);
+    moveit_msgs::msg::CollisionObject object;
+    object.id = id;
+    object.header.frame_id = "base_link";
+    object.primitives.resize(1);
+    object.primitives[0].type = shape_msgs::msg::SolidPrimitive::BOX;
+    object.primitives[0].dimensions = { dims.at(0), dims.at(1), dims.at(2) };
 
-  // moveit_msgs::msg::CollisionObject object4=object1;
-  // object4.id="block4";
-  // object4.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose4;
-  // pose4.position.x=0.25;
-  // pose4.position.y=-0.20;
-  // pose4.position.z=0.012;
-  // pose4.orientation.w=1.0;
-  // object4.pose=pose4;
-  // objects.push_back(object4);
+    geometry_msgs::msg::Pose pose;
+    pose.position.x = b["x"].as<double>();
+    pose.position.y = b["y"].as<double>();
+    pose.position.z = b["z"].as<double>();
+    pose.orientation.w = 1.0;
+    object.pose = pose;
 
-  // moveit_msgs::msg::CollisionObject object5=object1;
-  // object5.id="block5";
-  // object5.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose5;
-  // pose5.position.x=0.25;
-  // pose5.position.y=0.20;
-  // pose5.position.z=0.012;
-  // pose5.orientation.w=1.0;
-  // object5.pose=pose5;
-  // objects.push_back(object5);
+    objects.push_back(object);
+  }
 
-
-  // ___________________________BURGER________________________________
-  // moveit_msgs::msg::CollisionObject object1;
-  // object1.id = "block1";
-  // object1.header.frame_id = "base_link";
-  // object1.primitives.resize(1);
-  // object1.primitives[0].type = shape_msgs::msg::SolidPrimitive::BOX;
-  // object1.primitives[0].dimensions = { 0.063, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose;
-  // pose.position.x = 0.25;
-  // pose.position.y = -0.2;
-  // pose.position.z = 0.012;   
-  // pose.orientation.w = 1.0;
-  // object1.pose = pose;
-  // objects.push_back(object1);
-
-  // moveit_msgs::msg::CollisionObject object2=object1;
-  // object2.id="block2";
-  // object2.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose2;
-  // pose2.position.x=0.25;
-  // pose2.position.y=0.0;
-  // pose2.position.z=0.012;
-  // pose2.orientation.w=1.0;
-  // object2.pose=pose2;
-  // objects.push_back(object2);
-
-  // moveit_msgs::msg::CollisionObject object3=object1;
-  // object3.id="block3";
-  // object3.primitives[0].dimensions = { 0.063, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose3;
-  // pose3.position.x=0.25;
-  // pose3.position.y=-0.10;
-  // pose3.position.z=0.012;
-  // pose3.orientation.w=1.0;
-  // object3.pose=pose3;
-  // objects.push_back(object3);
-
-  // moveit_msgs::msg::CollisionObject object4=object1;
-  // object4.id="block4";
-  // object4.primitives[0].dimensions = { 0.063, 0.0317,0.024};
-  // geometry_msgs::msg::Pose pose4;
-  // pose4.position.x=0.25;
-  // pose4.position.y=0.10;
-  // pose4.position.z=0.012;
-  // pose4.orientation.w=1.0;
-  // object4.pose=pose4;
-  // objects.push_back(object4);
-
-  // ___________________________BIG TREE________________________________
-  moveit_msgs::msg::CollisionObject object1;
-  object1.id = "block1";
-  object1.header.frame_id = "base_link";
-  object1.primitives.resize(1);
-  object1.primitives[0].type = shape_msgs::msg::SolidPrimitive::BOX;
-  object1.primitives[0].dimensions = { 0.063, 0.0317,0.024};
-  geometry_msgs::msg::Pose pose;
-  pose.position.x = 0.25;
-  pose.position.y = 0.2;
-  pose.position.z = 0.012;   
-  pose.orientation.w = 1.0;
-  object1.pose = pose;
-  objects.push_back(object1);
-
-  moveit_msgs::msg::CollisionObject object2=object1;
-  object2.id="block2";
-  object2.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-  geometry_msgs::msg::Pose pose2;
-  pose2.position.x=0.25;
-  pose2.position.y=0.10;
-  pose2.position.z=0.012;
-  pose2.orientation.w=1.0;
-  object2.pose=pose2;
-  objects.push_back(object2);
-
-  moveit_msgs::msg::CollisionObject object3=object1;
-  object3.id="block3";
-  object3.primitives[0].dimensions = { 0.063, 0.0317,0.024};
-  geometry_msgs::msg::Pose pose3;
-  pose3.position.x=0.25;
-  pose3.position.y=0.0;
-  pose3.position.z=0.012;
-  pose3.orientation.w=1.0;
-  object3.pose=pose3;
-  objects.push_back(object3);
-
-  moveit_msgs::msg::CollisionObject object4=object1;
-  object4.id="block4";
-  object4.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-  geometry_msgs::msg::Pose pose4;
-  pose4.position.x=0.25;
-  pose4.position.y=-0.10;
-  pose4.position.z=0.012;
-  pose4.orientation.w=1.0;
-  object4.pose=pose4;
-  objects.push_back(object4);
-
-  moveit_msgs::msg::CollisionObject object5=object1;
-  object5.id="block5";
-  object5.primitives[0].dimensions = { 0.0317, 0.0317,0.024};
-  geometry_msgs::msg::Pose pose5;
-  pose5.position.x=0.25;
-  pose5.position.y=-0.20;
-  pose5.position.z=0.012;
-  pose5.orientation.w=1.0;
-  object5.pose=pose5;
-  objects.push_back(object5);
-
+  RCLCPP_INFO(node_->get_logger(), "Staging %zu block(s) in the planning scene for object_name='%s'",
+              objects.size(), object_name.c_str());
 
   moveit::planning_interface::PlanningSceneInterface psi;
   psi.applyCollisionObjects(objects);
 }
+
 void MTCTaskNode::publishattatch(const std::string& model1_name, const std::string& link1_name,
                                   const std::string& model2_name, const std::string& link2_name)
 {
@@ -261,8 +276,6 @@ void MTCTaskNode::publishattatch(const std::string& model1_name, const std::stri
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
 
-
-
 void MTCTaskNode::doTask(const std::string& object_id,double place_x,double place_y,
     double place_z,const std::vector<std::string> & addingcollisions)
 {
@@ -274,7 +287,6 @@ void MTCTaskNode::doTask(const std::string& object_id,double place_x,double plac
     task_.init();
   }
 
-  
   catch (mtc::InitStageException& e)
   {
     RCLCPP_ERROR_STREAM(LOGGER, e);
@@ -557,6 +569,91 @@ mtc::Task MTCTaskNode::createTask(const std::string& object_id,double place_x,do
   return task;
 }
 
+void MTCTaskNode::runAssembly()
+{
+  std::string object_name;
+  node_->get_parameter("object_name", object_name);
+
+  const YAML::Node& config = assemblyConfig();
+  YAML::Node objects_node = config["objects"];
+  if (!objects_node[object_name])
+  {
+    RCLCPP_ERROR(node_->get_logger(),
+                 "No assembly recipe found for object_name='%s', nothing to run.",
+                 object_name.c_str());
+    return;
+  }
+
+  group_parent_.clear();
+  YAML::Node steps = objects_node[object_name]["steps"];
+
+  RCLCPP_INFO(node_->get_logger(), "Running assembly '%s' (%zu step(s))",
+              object_name.c_str(), steps.size());
+
+  moveit::planning_interface::PlanningSceneInterface psi;
+
+  for (const auto& step : steps)
+  {
+    const std::string type = step["type"].as<std::string>();
+
+    if (type == "pick_place")
+    {
+      const std::string object_id = step["object_id"].as<std::string>();
+      const auto place = step["place"].as<std::vector<double>>();
+
+      std::vector<std::string> collisions;
+      for (const auto& c : step["allow_collision_with"])
+      {
+        const std::string other = c.as<std::string>();
+        if (other != object_id &&
+            std::find(collisions.begin(), collisions.end(), other) == collisions.end())
+        {
+          collisions.push_back(other);
+        }
+      }
+
+      // Remember where this piece was before moving it, so any pieces already welded to
+      // it (from an earlier 'attach' step) can be dragged along by the same transform.
+      geometry_msgs::msg::Pose old_pose;
+      bool had_old_pose = false;
+      {
+        auto before = psi.getObjects({ object_id });
+        auto it = before.find(object_id);
+        if (it != before.end())
+        {
+          old_pose = it->second.pose;
+          had_old_pose = true;
+        }
+      }
+
+      doTask(object_id, place.at(0), place.at(1), place.at(2), collisions);
+
+      if (had_old_pose)
+      {
+        auto after = psi.getObjects({ object_id });
+        auto it = after.find(object_id);
+        if (it != after.end())
+        {
+          propagateGroupMotion(object_id, old_pose, it->second.pose);
+        }
+      }
+    }
+    else if (type == "weld")
+    {
+      publishattatch(step["model1"].as<std::string>(), step["link1"].as<std::string>(),
+                      step["model2"].as<std::string>(), step["link2"].as<std::string>());
+    }
+    else if (type == "attach")
+    {
+      attachTogether(step["into"].as<std::string>(), step["from"].as<std::string>());
+    }
+    else
+    {
+      RCLCPP_WARN(node_->get_logger(), "Unknown assembly step type '%s', skipping", type.c_str());
+    }
+  }
+}
+
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
@@ -574,94 +671,7 @@ int main(int argc, char** argv)
   });
 
   mtc_task_node->setupPlanningScene();
-
-  // BATTERY
-  // mtc_task_node->doTask("block2",0.25,-0.1,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_2x2_blue","b_link","lego_2x2_yellow","y_link");
-  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-
-  // // MAGNET
-  // mtc_task_node->doTask("block2",0.25,-0.1,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_2x2_red","r_link","lego_2x2_blue","b_link");
-  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-
-  // // CARROT
-  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_2x2_yellow1","y_link1","lego_2x2_yellow2","y_link2");
-  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
-  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
-  // mtc_task_node->publishattatch("lego_2x2_yellow2","y_link2","lego_2x2_green","g_link");
-  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
-
-  // // TRAFFIC LIGHT
-  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_2x2_green","g_link","lego_2x2_yellow","y_link");
-  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
-  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
-  // mtc_task_node->publishattatch("lego_2x2_yellow","y_link","lego_2x2_red","r_link");
-  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
-
-  // BIG CARROT
-  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_2x2_yellow1","y_link1","lego_2x2_yellow2","y_link2");
-  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
-  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
-  // mtc_task_node->publishattatch("lego_2x2_yellow2","y_link2","lego_4x2_yellow","y_link3");
-  // mtc_task_node->doTask("block4",0.25,0.1,0.087,{"block4","block3","block2","block1"});
-  // mtc_task_node->publishattatch("lego_4x2_yellow","y_link3","lego_2x2_green","g_link");
-  // mtc_task_node->doTask("block4",0.25,0.0,0.087,{"block4","block3","block2","block1"});
-
-  // ICE CREAM
-  // mtc_task_node->doTask("block2",0.233,0.0,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_4x2_yellow","y_link2","lego_2x2_blue","b_link");
-  // mtc_task_node->doTask("block3",0.267,0.0,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_4x2_yellow","y_link2","lego_2x2_red","r_link");
-  // mtc_task_node->doTask("block2",0.234,0.2,0.063,{"block3","block2","block1","block5"});
-  // mtc_task_node->publishattatch("lego_2x2_yellow","y_link1","lego_4x2_yellow","y_link2");
-  // mtc_task_node->doTask("block4",0.25,0.2,0.087,{"block4","block3","block2","block1","block5"});
-  // mtc_task_node->publishattatch("lego_2x2_red","r_link","lego_2x2_green","g_link");
-  // mtc_task_node->doTask("block4",0.25,0.0,0.087,{"block4","block3","block2","block1","block5"});
-
-  // E-STOP
-  // mtc_task_node->doTask("block2",0.25,-0.1,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_4x2_yellow","y_link","lego_2x2_red","r_link");
-  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-
-  // // SMALL TREE
-  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_2x2_yellow","y_link","lego_4x2_green","g_link");
-  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
-  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
-  // mtc_task_node->publishattatch("lego_4x2_green","g_link1","lego_2x2_green","g_link2");
-  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
-
-  // // HAMMER
-  // mtc_task_node->doTask("block2",0.25,0.0,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_2x2_red1","r_link1","lego_2x2_red2","r_link2");
-  // mtc_task_node->doTask("block2",0.25,0.1,0.039,{"block1"});
-  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1"});
-  // mtc_task_node->publishattatch("lego_2x2_red2","r_link2","lego_4x2_blue","b_link");
-  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block3","block2","block1"});
-
-  // BURGER
-  // mtc_task_node->doTask("block2",0.2975,-0.2,0.012,{"block1"});
-  // mtc_task_node->doTask("block3",0.2658,-0.2,0.039,{"block1"});
-  // mtc_task_node->publishattatch("lego_2x2_red","r_link2","lego_4x2_yellow2","y_link2");
-  // mtc_task_node->publishattatch("lego_4x2_red","r_link1","lego_4x2_yellow2","y_link2");
-  // mtc_task_node->doTask("block3",0.25,0.1,0.063,{"block3","block2","block1","block4"});
-  // mtc_task_node->publishattatch("lego_4x2_yellow1","y_link1","lego_4x2_red","r_link1");
-  // mtc_task_node->doTask("block3",0.25,0.0,0.063,{"block4","block3","block2","block1"});
-
-  // BIG TREE
-  mtc_task_node->doTask("block2",0.299,0.2,0.012,{"block1"});
-  mtc_task_node->doTask("block3",0.2658,0.2,0.039,{"block1","block2","block3"});
-  mtc_task_node->publishattatch("lego_4x2_green1","g_link1","lego_4x2_green2","g_link3");
-  mtc_task_node->publishattatch("lego_2x2_green1","g_link2","lego_4x2_green2","g_link3");
-  mtc_task_node->doTask("block3",0.25,-0.2,0.063,{"block3","block2","block1","block5"});
-  mtc_task_node->publishattatch("lego_2x2_yellow","y_link","lego_4x2_green1","g_link1");
-  mtc_task_node->doTask("block4",0.25,-0.2,0.092,{"block4","block3","block2","block1","block5"});
-  mtc_task_node->publishattatch("lego_4x2_green2","g_link3","lego_2x2_green2","g_link4");
-  mtc_task_node->doTask("block4",0.25,0.0,0.087,{"block4","block3","block2","block1","block5"});  
+  mtc_task_node->runAssembly();
 
   spin_thread->join();
   rclcpp::shutdown();

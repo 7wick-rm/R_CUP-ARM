@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+	cmake_minimum_required(VERSION 3.8)
 project(mtc_tutorial)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -11,11 +11,17 @@ find_package(moveit_task_constructor_core REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(link_attatcher REQUIRED)
+find_package(yaml-cpp REQUIRED)
+find_package(ament_index_cpp REQUIRED)
 
 add_executable(mtc_node src/mtc_node.cpp)
 target_include_directories(mtc_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
+
+target_link_libraries(mtc_node yaml-cpp)
+ament_target_dependencies(mtc_node ament_index_cpp)
+
 target_compile_features(mtc_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
   mtc_node
