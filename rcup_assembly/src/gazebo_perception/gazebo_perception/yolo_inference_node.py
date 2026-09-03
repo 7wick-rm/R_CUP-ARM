@@ -15,7 +15,7 @@ class YOLOInferenceNode(Node):
         self.logger = self.get_logger()
 
         self.logger.info("Loading Model")
-        model_path = "/home/sathwik/best.pt"
+        model_path = "/home/akshit/sml_vision_obb/runs/obb/runs/yolo11s_obb_v1/weights/best.pt"
         self.model = YOLO(model=model_path)
         self.logger.info("Model loaded successfully")
 

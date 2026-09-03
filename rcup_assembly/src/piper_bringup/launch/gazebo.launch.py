@@ -17,6 +17,10 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
+
+    gpu_offload = SetEnvironmentVariable(name="__NV_PRIME_RENDER_OFFLOAD", value="1")
+    glx_vendor = SetEnvironmentVariable(name="__GLX_VENDOR_LIBRARY_NAME", value="nvidia")
+
     robo_description = get_package_share_directory("piper_description")
     piper_world = get_package_share_directory("piper_bringup")
 
@@ -206,7 +210,7 @@ def generate_launch_description():
                 parameters=[{
                     'use_sim_time': True, 
                     'approximate_sync': True,
-                    'queue_size': 5
+                    'queue_size': 20
                 }]
             ),
         ],
@@ -230,6 +234,8 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        gpu_offload,
+        glx_vendor,
         model_arg,
         object_name_arg,
         gazebo_resource_path,
