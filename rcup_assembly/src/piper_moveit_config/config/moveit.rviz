@@ -5,8 +5,10 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Motion Planning Tasks1
+        - /PointCloud21
+        - /PointCloud21/Topic1
       Splitter Ratio: 0.5
-    Tree Height: 281
+    Tree Height: 147
   - Class: rviz_common/Help
     Name: Help
   - Class: rviz_common/Views
@@ -23,8 +25,8 @@ Panels:
     Name: Motion Planning Tasks
     Tasks View:
       property_splitter:
-        - 363
-        - 121
+        - 245
+        - 90
       solution_sorting:
         column: 0
         order: 1
@@ -33,7 +35,7 @@ Panels:
         - 229
       solutions_view_columns: ~
       tasks_view_columns:
-        - 272
+        - 286
         - 57
         - 57
         - 57
@@ -56,7 +58,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 10
-      Reference Frame: <Fixed Frame>
+      Reference Frame: base_link
       Value: true
     - Acceleration_Scaling_Factor: 1
       Class: moveit_rviz_plugin/MotionPlanning
@@ -90,6 +92,25 @@ Visualization Manager:
           Expand Tree: false
           Link Tree Style: Links in Alphabetic Order
           base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_horizontal_rod:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_optical_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_rod:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -205,6 +226,25 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          camera_horizontal_rod:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_optical_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_rod:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           gripper_aux_mount:
             Alpha: 1
             Show Axes: false
@@ -291,6 +331,25 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          camera_horizontal_rod:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          camera_optical_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_rod:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           gripper_aux_mount:
             Alpha: 1
             Show Axes: false
@@ -368,8 +427,56 @@ Visualization Manager:
       State Display Time: 0.05 s
       Task Solution Topic: /solution
       Tasks:
-        demo task: 0
+        {}
       Trail Step Size: 1
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /rgbd_camera/image
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /rgbd_camera/points
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
@@ -389,29 +496,27 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 1.4084714651107788
+      Distance: 1.8328126668930054
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.046256136149168015
-        Y: -0.049782831221818924
-        Z: 0.08575799316167831
+        X: 0.2082471251487732
+        Y: -0.1360575556755066
+        Z: 0.14847488701343536
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3850001096725464
+      Pitch: 0.1599999964237213
       Target Frame: table
       Value: Orbit (rviz_default_plugins)
-      Yaw: 0.8519965410232544
+      Yaw: 0.40699154138565063
     Saved: ~
 Window Geometry:
-  " - Slider":
-    collapsed: false
   Displays:
     collapsed: false
   Height: 1078
@@ -419,13 +524,17 @@ Window Geometry:
     collapsed: false
   Hide Left Dock: false
   Hide Right Dock: true
+  Image:
+    collapsed: false
   Motion Planning Tasks:
+    collapsed: false
+  Motion Planning Tasks - Slider:
     collapsed: false
   MotionPlanning:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000002b4000003dcfc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d0000019c000000c900fffffffc000001df0000023a0000019a0100001cfa000000000100000002fb0000002a004d006f00740069006f006e00200050006c0061006e006e0069006e00670020005400610073006b00730100000000ffffffff000000cd00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000000000002b4000001f300fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb000000120020002d00200053006c00690064006500720000000000ffffffff0000004100ffffff000000010000019b00000379fc0200000001fb0000000a00560069006500770073000000003b00000379000000a400ffffff000004c6000003dc00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000200000000000002b4000003dcfc0200000007fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000116000000c900fffffffc00000159000001a50000019a0100001cfa000000000100000002fb0000002a004d006f00740069006f006e00200050006c0061006e006e0069006e00670020005400610073006b00730100000000ffffffff000000cd00fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000000000002b4000001f300fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb000000120020002d00200053006c00690064006500720000000000ffffffff0000000000000000fb0000003c004d006f00740069006f006e00200050006c0061006e006e0069006e00670020005400610073006b00730020002d00200053006c00690064006500720000000000ffffffff0000004100fffffffb0000000a0049006d0061006700650100000304000001150000002800ffffff000000010000019b00000379fc0200000001fb0000000a00560069006500770073000000003b00000379000000a400ffffff000004c6000003dc00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: true
   Width: 1920

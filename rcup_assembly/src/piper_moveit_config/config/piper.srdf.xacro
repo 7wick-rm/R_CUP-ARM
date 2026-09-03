@@ -76,6 +76,8 @@
     <disable_collisions link1="link_4" link2="link_5" reason="Adjacent"/>
     <disable_collisions link1="link_4" link2="right_finger" reason="Never"/>
     <disable_collisions link1="link_5" link2="right_finger" reason="Never"/>
+    <disable_collisions link1="camera_link" link2="camera_horizontal_rod" reason="Adjacent"/>
+    <disable_collisions link1="camera_horizontal_rod" link2="camera_rod" reason="Adjacent"/>
 
     <!-- <disable_collisions link1="ax_left_finger" link2="ax_right_finger" reason="Default"/>
     <disable_collisions link1="ax_grip_base" link2="ax_right_finger" reason="Default" /> 

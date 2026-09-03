@@ -9,7 +9,8 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, \
 from launch.substitutions import Command, LaunchConfiguration, \
     PathJoinSubstitution, PythonExpression, FindExecutable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
+from launch_ros.actions import Node, ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.parameter_descriptions import ParameterValue
@@ -98,11 +99,11 @@ def generate_launch_description():
         executable="parameter_bridge",
         arguments=[
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
-            # "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
-            # "/depth_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
-            # "/depth_camera/depth/image_raw@sensor_msgs/msg/Image[gz.msgs.Image",
-            # "/depth_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
+            '/rgbd_camera/image@sensor_msgs/msg/Image[ignition.msgs.Image',
+            '/rgbd_camera/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
+            '/rgbd_camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
         ],
+        parameters=[{'use_sim_time': True}],
     )
 
     joint_state_broadcaster_spawner = TimerAction(
@@ -185,6 +186,49 @@ def generate_launch_description():
         ]
     )
 
+    point_cloud_processor = ComposableNodeContainer(
+        name='image_proc_container',
+        namespace='',
+        package='rclcpp_components',
+        executable='component_container',
+        composable_node_descriptions=[
+            ComposableNode(
+                package='depth_image_proc',
+                plugin='depth_image_proc::PointCloudXyzrgbNode',
+                name='point_cloud_xyzrgb_node',
+                remappings=[
+                    ('rgb/image_rect_color', '/rgbd_camera/image'),
+                    ('depth_registered/image_rect', '/rgbd_camera/depth_image'),
+                    ('rgb/camera_info', '/rgbd_camera/camera_info'),
+                    ('points', '/rgbd_camera/points')
+                ],
+                # CRITICAL: You must include approximate_sync and queue_size here
+                parameters=[{
+                    'use_sim_time': True, 
+                    'approximate_sync': True,
+                    'queue_size': 5
+                }]
+            ),
+        ],
+        output='screen',
+    )
+    
+    inference_node = Node(
+        package="gazebo_perception",
+        executable="inference_node",
+        name="inference_node",
+        output="screen",
+        parameters=[{"use_sim_time": True}]
+    )
+
+    pcl_node = Node(
+        package="pcl_geometry",
+        executable="pcl_geometry_node",
+        name="pcl_geometry_node",
+        output="screen",
+        parameters=[{"use_sim_time": True}]
+    )
+
     return LaunchDescription([
         model_arg,
         object_name_arg,
@@ -193,9 +237,12 @@ def generate_launch_description():
         gazebo,
         gz_spawn_entity,
         gz_ros2_bridge,
+        point_cloud_processor,
+        inference_node,
+        pcl_node,
         joint_state_broadcaster_spawner,
         arm_controller_spawner,
         gripper_controller_spawner,
         move_group_node,
-        rviz_node
+        rviz_node,
     ])

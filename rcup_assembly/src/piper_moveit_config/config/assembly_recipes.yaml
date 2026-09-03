@@ -87,7 +87,7 @@ objects:
       - { type: attach, into: "block3", from: "block2" }
       - { type: pick_place, object_id: "block3", place: [0.25, -0.2, 0.06305], allow_collision_with: ["block3", "block2", "block1", "block5"] }
       - { type: weld, model1: "lego_2x2_yellow", link1: "y_link", model2: "lego_4x2_green1", link2: "g_link1" }
-      - { type: pick_place, object_id: "block4", place: [0.25, -0.2, 0.087], allow_collision_with: ["block3", "block2", "block1", "block5"] }
+      - { type: pick_place, object_id: "block4", place: [0.25, -0.2, 0.09], allow_collision_with: ["block3", "block2", "block1", "block5"] }
       - { type: attach, into: "block3", from: "block4" }
       - { type: weld, model1: "lego_4x2_green2", link1: "g_link3", model2: "lego_2x2_green2", link2: "g_link4" }
       - { type: attach, into: "block3", from: "block5" }
