@@ -44,7 +44,8 @@ private:
 
   geometry_msgs::msg::Pose estimateHybridOrientation(
     const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & brick_cloud, float theta,
-    Eigen::Vector3f surface_normal);
+    Eigen::Vector3f surface_normal,
+    Eigen::Matrix3f rot_matrix);
   void handleToggle(
     const std::shared_ptr<std_srvs::srv::SetBool::Request> request, std::shared_ptr<std_srvs::srv::SetBool::Response> response
   );
@@ -65,10 +66,24 @@ private:
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
 
+  bool active_; 
+  bool get_place_pose; 
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
+  
+  //Callback Groups
+  rclcpp::CallbackGroup::SharedPtr processing_cb_group;
+  rclcpp::CallbackGroup::SharedPtr service_cb_group;
+  rclcpp::CallbackGroup::SharedPtr publisher_cb_group;
+  
+  // Params
   double ransac_distance_threshold_;
   double cluster_tolerance_;
-  bool active_; 
-  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
+  int64_t ransac_max_iterations_;
+  double ransac_eps_angle_deg_;
+  int64_t min_cluster_size_;
+  int64_t max_cluster_size_;
+  float margin_px_;
+  int64_t min_cloud_size_;
 };
 
 #endif  // PCL_GEOMETRY__PCL_GEOMETRY_NODE_HPP_

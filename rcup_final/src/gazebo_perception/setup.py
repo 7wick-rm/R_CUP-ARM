@@ -10,6 +10,7 @@ data_files = [
     (os.path.join("share", package_name, "launch"), glob("launch/*.py")),
     (os.path.join("share", package_name, "config"), glob("config/*.rviz")),
     (os.path.join("share", package_name, "worlds"), glob("worlds/*.sdf")),
+    (os.path.join("share", package_name, "weights"), glob("weights/*.pt")),
 ]
 
 for root, dirs, files in os.walk('models'):
@@ -31,6 +32,7 @@ setup(
             "perception_node = gazebo_perception.perception_node:main",
             "inference_node = gazebo_perception.yolo_inference_node:main",
             "perception_server = gazebo_perception.perception_server:main",
+            "visualizer_node = gazebo_perception.visualizer_node:main",
         ],
     },
 )

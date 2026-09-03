@@ -1,6 +1,12 @@
+# uint8 GetPickPose = 0 
+# uint8 GetPlacePose = 1
+
 int32 target_samples
+# uint8 number_of_blocks
+# uint8 action
 ---
 geometry_msgs/PoseArray block_poses 
 string[] block_classes
 string[] block_ids
 shape_msgs/SolidPrimitive[] block_dims
+geometry_msgs/PoseArray place_poses
