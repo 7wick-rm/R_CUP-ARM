@@ -261,18 +261,18 @@
   <!-- Vertical Rod Link (Height increased by 1.5x from 0.35 to 0.525) -->
   <link name="camera_rod">
     <visual>
-      <origin xyz="0 0 0.2625" rpy="0 0 0"/>
+      <origin xyz="0 0 0.24" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.005" length="0.525"/>
+        <cylinder radius="0.005" length="0.48"/>
       </geometry>
       <material name="akshit">
         <color rgba="1 1 1 1" />
       </material>
     </visual> 
     <collision>
-      <origin xyz="0 0 0.2625" rpy="0 0 0"/>
+      <origin xyz="0 0 0.24" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.005" length="0.525"/>
+        <cylinder radius="0.005" length="0.48"/>
       </geometry>
       <material name="akshit">
         <color rgba="1 1 1 1" />
@@ -296,7 +296,7 @@
   <joint name="vertical_to_horizontal_rod" type="fixed">
     <parent link="camera_rod"/>
     <child link="camera_horizontal_rod"/>
-    <origin xyz="0 0 0.525" rpy="0 0 0"/>
+    <origin xyz="0 0 0.48" rpy="0 0 0"/>
   </joint>
 
   <!-- Connect camera to the end of the horizontal rod facing downwards -->

@@ -166,19 +166,19 @@ void PclGeometryNode::syncedCallback(
   pcl::fromROSMsg(*pc_msg, *optical_cloud);
 
   geometry_msgs::msg::PoseArray pose_array;
-  pose_array.header.frame_id = "base_footprint";
+  pose_array.header.frame_id = "base_link";
   pose_array.header.stamp = pc_msg->header.stamp;
 
   perception_msgs::msg::PerceptionMsg perception_msg;
-  perception_msg.block_poses.header.frame_id = "base_footprint";
+  perception_msg.block_poses.header.frame_id = "base_link";
   perception_msg.block_poses.header.stamp = pc_msg->header.stamp;  
 
   visualization_msgs::msg::MarkerArray marker_array;
-  geometry_msgs::msg::TransformStamped optical_to_base_footprint;
+  geometry_msgs::msg::TransformStamped optical_to_base_link;
   try
   {
-    optical_to_base_footprint =
-      tf_buffer_->lookupTransform("base_footprint", pc_msg->header.frame_id, tf2::TimePointZero);
+    optical_to_base_link =
+      tf_buffer_->lookupTransform("base_link", pc_msg->header.frame_id, tf2::TimePointZero);
   }
   catch (const tf2::TransformException & ex)
   {
@@ -282,7 +282,7 @@ void PclGeometryNode::syncedCallback(
     }
     // Transform to World Space
     // Apply TF2 transform to isolated points
-    Eigen::Affine3d eigen_transform = tf2::transformToEigen(optical_to_base_footprint);
+    Eigen::Affine3d eigen_transform = tf2::transformToEigen(optical_to_base_link);
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr transformed_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 
     pcl::transformPointCloud(*rough_optical_cloud, *transformed_cloud, eigen_transform);
@@ -443,7 +443,7 @@ void PclGeometryNode::syncedCallback(
     pcl::getMinMax3D(*unrotated_cloud, min_pt, max_pt);
 
     visualization_msgs::msg::Marker obb_marker;
-    obb_marker.header.frame_id = "base_footprint";
+    obb_marker.header.frame_id = "base_link";
     obb_marker.header.stamp = pc_msg->header.stamp;
     obb_marker.ns = "obb_boxes";
     obb_marker.id = marker_id++;
@@ -482,7 +482,7 @@ void PclGeometryNode::syncedCallback(
   sensor_msgs::msg::PointCloud2 debug_msg;
   pcl::toROSMsg(*debug_cloud, debug_msg);
 
-  debug_msg.header.frame_id = "base_footprint";
+  debug_msg.header.frame_id = "base_link";
   debug_msg.header.stamp = pc_msg->header.stamp;
 
   debug_cloud_pub_->publish(debug_msg);
@@ -490,7 +490,7 @@ void PclGeometryNode::syncedCallback(
   sensor_msgs::msg::PointCloud2 ransac_msg;
   pcl::toROSMsg(*ransac_cloud, ransac_msg);
 
-  ransac_msg.header.frame_id = "base_footprint";
+  ransac_msg.header.frame_id = "base_link";
   ransac_msg.header.stamp = pc_msg->header.stamp;
 
   ransac_cloud_pub_->publish(ransac_msg);
