@@ -2,20 +2,10 @@ from launch import LaunchDescription
 from launch_ros.actions import Node, ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 
-def generate_launch_description():
+from launch_ros.actions import Node
 
-    bridge_node = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        name='rgbd_bridge',
-        output='screen',
-        arguments=[
-            '/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock', 
-            '/rgbd_camera/image@sensor_msgs/msg/Image[ignition.msgs.Image',
-            '/rgbd_camera/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
-            '/rgbd_camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
-        ],
-    )
+
+def generate_launch_description():
 
     point_cloud_processor = ComposableNodeContainer(
         name='image_proc_container',
@@ -33,32 +23,35 @@ def generate_launch_description():
                     ('rgb/camera_info', '/rgbd_camera/camera_info'),
                     ('points', '/rgbd_camera/points')
                 ],
-                parameters=[{'use_sim_time': True}]
+                # CRITICAL: You must include approximate_sync and queue_size here
+                parameters=[{
+                    'use_sim_time': True, 
+                    'approximate_sync': True,
+                    'queue_size': 5
+                }]
             ),
         ],
         output='screen',
     )
-
+    
     inference_node = Node(
-            package="gazebo_perception",
-            executable="inference_node",
-            name="inference_node",
+        package="gazebo_perception",
+        executable="inference_node",
+        name="inference_node",
+        output="screen",
+        parameters=[{"use_sim_time": True}]
+    )
+
+    pcl_node = Node(
+            package="pcl_geometry",
+            executable="pcl_geometry_node",
+            name="pcl_geometry_node",
             output="screen",
             parameters=[{"use_sim_time": True}]
         )
 
-    pcl_node = Node(
-        package="pcl_geometry",
-        executable="pcl_geometry_node",
-        name="pcl_geometry_node",
-        output="screen",
-        parameters=[{"use_sim_time": True}]
-    )
-    
-
     return LaunchDescription([
-        # bridge_node,
         point_cloud_processor,
         inference_node,
-        pcl_node
+        pcl_node,
     ])

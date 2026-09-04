@@ -136,7 +136,6 @@ def generate_launch_description():
                     '/rgbd_camera/image@sensor_msgs/msg/Image[ignition.msgs.Image',
                     '/rgbd_camera/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
                     '/rgbd_camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
-                    # '/rgbd_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
                 ],
         parameters=[{'use_sim_time': True}],
     )
@@ -474,6 +473,9 @@ def generate_launch_description():
         glx_vendor,
         gazebo_resource_path,
         gazebo,
+        # point_cloud_processor,
+        # inference_node,
+        # pcl_node,
         robot_state_publisher,
         bridge,
         spawn_robot,
@@ -496,8 +498,5 @@ def generate_launch_description():
         gazebo_station_relay,
         move_group_node,
         rviz_node,
-        # point_cloud_processor,
-        # inference_node,
-        # pcl_node
     ])
 
