@@ -237,12 +237,12 @@ def generate_launch_description():
         gazebo,
         gz_spawn_entity,
         gz_ros2_bridge,
-        point_cloud_processor,
-        inference_node,
-        pcl_node,
+        # point_cloud_processor,
+        # inference_node,
+        # pcl_node,
         joint_state_broadcaster_spawner,
         arm_controller_spawner,
         gripper_controller_spawner,
         move_group_node,
-        rviz_node,
+        rviz_node
     ])
