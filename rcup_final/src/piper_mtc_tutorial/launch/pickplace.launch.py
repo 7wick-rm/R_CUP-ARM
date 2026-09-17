@@ -10,7 +10,7 @@ def generate_launch_description():
 
     object_name_arg = DeclareLaunchArgument(
         name="object_name",
-        default_value="burger",
+        default_value="traffic_light",
         description="Which object to assemble"
     )
 

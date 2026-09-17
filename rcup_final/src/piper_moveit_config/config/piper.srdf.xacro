@@ -37,8 +37,8 @@
         <joint name="mimic_gripper_joint" value="0.038"/>
     </group_state>
     <group_state name="closed" group="gripper">
-        <joint name="gripper_joint" value="0.01"/>
-         <joint name="mimic_gripper_joint" value="0.01"/>
+        <joint name="gripper_joint" value="0.012"/>
+         <joint name="mimic_gripper_joint" value="0.012"/>
     </group_state>
 
 

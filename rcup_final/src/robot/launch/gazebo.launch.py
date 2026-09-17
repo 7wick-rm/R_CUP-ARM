@@ -9,6 +9,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 from moveit_configs_utils import MoveItConfigsBuilder
+from ament_index_python.packages import get_package_prefix
 
 def generate_launch_description():
 
@@ -78,6 +79,7 @@ def generate_launch_description():
                 package='moveit_ros_move_group',
                 executable='move_group',
                 name='move_group',
+                namespace='piper',
                 output='screen',
                 remappings=[
                     ('/planning_scene', '/piper/planning_scene'),
@@ -100,6 +102,7 @@ def generate_launch_description():
                         '/piper/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/update_full'),
                     ('/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/get_interactive_markers',
                         '/piper/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/get_interactive_markers'),
+                    ('/execute_task_solution', '/piper/execute_task_solution'),
                 ],
                 parameters=[
                     piper_ompl_planning_yaml,
@@ -123,6 +126,7 @@ def generate_launch_description():
                 package="rviz2",
                 executable="rviz2",
                 name="rviz2_piper",
+                namespace='piper',
                 output="screen",
                 arguments=["-d", piper_rviz_config_file],
                 remappings=[
@@ -143,6 +147,7 @@ def generate_launch_description():
                         '/piper/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/update_full'),
                     ('/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/get_interactive_markers',
                         '/piper/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic/get_interactive_markers'),
+                    ('/execute_task_solution', '/piper/execute_task_solution'),
                     
                 ],
                 parameters=[
@@ -170,7 +175,7 @@ def generate_launch_description():
 
     set_plugin_path = SetEnvironmentVariable(
         name='IGN_GAZEBO_SYSTEM_PLUGIN_PATH',
-        value='/opt/ros/humble/lib'
+        value=os.path.join(get_package_prefix('link_attatcher'), 'lib') + ':/opt/ros/humble/lib'
     )
   
     gazebo = ExecuteProcess(

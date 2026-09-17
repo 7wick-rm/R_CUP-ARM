@@ -128,32 +128,19 @@ objects:
       - { type: pick_place, object_id: "block3", place: [0.25, 0.0, 0.063], allow_collision_with: ["block3", "block2", "block1"] }
 
   traffic_light:
-    # Positions here are piper's base_link frame, which is mounted directly
-    # on wb_left's own frame with zero relative rotation -- so these numbers
-    # are the SAME local offsets the warehouse arm's mtc_node2.cpp uses when
-    # placing blocks on the workbench (slot_x = (block_slot-1)*0.08, y=0,
-    # z = box_dim_z/2 + BLOCK_DIM_Z/2 + 0.1). block1/2/3 = warehouse slot 0/1/2.
-    #
-    # z=0.25 is the NOMINAL pre-execution place target, not necessarily the
-    # block's true final resting height (the warehouse's "lower to place"
-    # motion travels further after that point, same gap hit once before with
-    # base_link placement) -- verify against the block's ACTUAL pose in
-    # RViz/get_planning_scene once running, and shift ALL z values here by
-    # the same correction if it's off; don't re-derive them individually,
-    # since they're all offset from one base_z by fixed LEGO-layer-height
-    # increments (+0.027, +0.051) that don't change.
     blocks:
-      block1: { dims: [0.0317, 0.0317, 0.024], x: -0.08, y: 0.0, z: 0.25 }   # anchor/build site == warehouse slot 0
-      block2: { dims: [0.0317, 0.0317, 0.024], x: 0.00,  y: 0.0, z: 0.25 }   # warehouse slot 1 (center)
-      block3: { dims: [0.0317, 0.0317, 0.024], x: 0.08,  y: 0.0, z: 0.25 }   # warehouse slot 2
+      block1: { dims: [0.038, 0.038, 0.0288], x: 0.35, y: 0.144, z: 0.015 }
+      block2: { dims: [0.038, 0.038, 0.0288], x: 0.35, y: 0.0, z: 0.015 }
+      block3: { dims: [0.038, 0.038, 0.0288], x: 0.35, y: -0.144, z: 0.015 }
     steps:
-      - { type: pick_place, object_id: "block2", place: [-0.08, 0.0, 0.277], allow_collision_with: ["block1"] }
-      - { type: weld, model1: "lego_2x2_green", link1: "g_link", model2: "lego_2x2_yellow", link2: "y_link" }
+      - { type: pick_place, object_id: "block2", place: [0.35, 0.144, 0.0468], allow_collision_with: ["block1"] }
+      - { type: weld, model1: "s_bot_left_block_green", link1: "s_bot_left_block_green_link", model2: "s_bot_left_block_blue", link2: "s_bot_left_block_blue_link" }
       - { type: attach, into: "block1", from: "block2" }
-      - { type: pick_place, object_id: "block3", place: [-0.08, 0.0, 0.301], allow_collision_with: ["block3", "block2", "block1"] }
-      - { type: weld, model1: "lego_2x2_yellow", link1: "y_link", model2: "lego_2x2_red", link2: "r_link" }
+      - { type: pick_place, object_id: "block3", place: [0.35, 0.144, 0.0756], allow_collision_with: ["block3", "block2", "block1"] }
+      - { type: weld, model1: "s_bot_left_block_blue", link1: "s_bot_left_block_blue_link", model2: "s_bot_left_block_red", link2: "s_bot_left_block_red_link" }
       - { type: attach, into: "block1", from: "block3" }
-      - { type: pick_place, object_id: "block3", place: [0.00, 0.0, 0.301], allow_collision_with: ["block3", "block2", "block1"] }
+      - { type: pick_place, object_id: "block3", place: [0.35, 0.0, 0.0756], allow_collision_with: ["block3", "block2", "block1"] }
+
 
   big_carrot:
     blocks:

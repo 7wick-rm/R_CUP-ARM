@@ -26,7 +26,7 @@ BASE_SLOTS = [
 # WB_SLOTS -- there's no live tracking for this yet (piper's assembled
 # object isn't in BLOCK_MODEL_NAMES), so this NEEDS verifying against where
 # piper actually leaves it, relative to the warehouse arm, before trusting it.
-ASSEMBLED_PICK_POSE = (0.50, 0.50, 0.10)  # TODO: tune once piper is running
+ASSEMBLED_PICK_POSE = (0.455, 0.008, 0.21)  # TODO: tune once piper is running
 WB_SLOTS = [
     (0.50, 0.50, 0.00),    # slot 0 - bottom block
     (0.50, 0.50, 0.05),    # slot 1 - middle block

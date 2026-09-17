@@ -12,6 +12,11 @@
     <plugin name='gz::sim::systems::Physics' filename='gz-sim-physics-system'/>
     <plugin name='gz::sim::systems::SceneBroadcaster' filename='gz-sim-scene-broadcaster-system'/>
     <plugin name='gz::sim::systems::UserCommands' filename='gz-sim-user-commands-system'/>
+
+    <plugin filename="liblink_attatcher_plugin.so"
+      name="link_attatcher::LinkAttatcherPlugin">
+    </plugin>
+
     <gravity>0 0 -9.8</gravity>
     <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
     <atmosphere type='adiabatic'/>
@@ -1048,10 +1053,11 @@
     </model>
 
 
-  <model name="s_bot_left_block_blue">
+  <model name="s_bot_left_block_blue"> <!--YELLOW-->
     <static>false</static>
     <link name="s_bot_left_block_blue_link">
       <pose>-4.5 -0.40 0.183 0 0 1.5708</pose>
+      <!-- <pose>-3.55 1.25 0.294 0 0 1.5708</pose> -->
       <inertial>
         <mass>0.01</mass>
         <inertia>
@@ -1069,8 +1075,8 @@
           <mesh><uri>model://meshes/2x2_base_simplified.obj</uri><scale>1.2 1.2 1.2</scale></mesh>
         </geometry>
         <material>
-          <ambient>0.1 0.1 0.8 1</ambient>
-          <diffuse>0.1 0.1 0.8 1</diffuse>
+          <ambient>0.82 0.729 0.05 1</ambient>
+          <diffuse>0.82 0.729 0.05 1</diffuse>
         </material>
       </visual>
     </link>
@@ -1081,6 +1087,7 @@
     <static>false</static>
     <link name="s_bot_left_block_green_link">
       <pose>-4.72 -0.80 0.183 0 0 1.5708</pose>
+      <!-- <pose>-3.55 1.394 0.294 0 0 1.5708</pose> -->
       <inertial>
         <mass>0.01</mass>
         <inertia>
@@ -1109,6 +1116,7 @@
     <static>false</static>
     <link name="s_bot_left_block_red_link">
       <pose>-4.55 -1.0 0.183 0 0 1.5708</pose>
+      <!-- <pose>-3.55 1.106 0.294 0 0 1.5708</pose> -->
       <inertial>
         <mass>0.01</mass>
         <inertia>
@@ -1401,7 +1409,7 @@
 <!-- BLUE WALLS-->
 <model name='bw_north_L'>
   <static>true</static>
-  <pose>-1.80 2.25 0.25 0 0 1.5708</pose>
+  <pose>-1.80 2.35 0.25 0 0 1.5708</pose>
   
   <link name='link'>
     <inertial>

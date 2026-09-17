@@ -45,7 +45,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             os.path.join(
                 get_package_share_directory('piper_mtc_tutorial'),  # <-- placeholder, see note above
-                'launch', 'pick_place.launch.py'
+                'launch', 'pickplace.launch.py'
             ),
             launch_arguments={
                 'object_name': LaunchConfiguration('object_name'),

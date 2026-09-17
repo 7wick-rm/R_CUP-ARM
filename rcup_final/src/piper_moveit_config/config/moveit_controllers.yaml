@@ -8,11 +8,11 @@
     moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
     moveit_simple_controller_manager:
       controller_names:
-        - piper/joint_trajectory_controller
-        - piper/claw_controller
-      piper/joint_trajectory_controller:
+        - joint_trajectory_controller
+        - claw_controller
+      joint_trajectory_controller:
         type: FollowJointTrajectory
-        action_ns: follow_joint_trajectory
+        action_ns: follow_joint_trajectory # <-- Revert to this
         default: true
         joints:
           - joint_1
@@ -21,9 +21,9 @@
           - joint_4
           - joint_5
           - joint_6
-      piper/claw_controller:
+      claw_controller:
         type: FollowJointTrajectory
-        action_ns: follow_joint_trajectory
+        action_ns: follow_joint_trajectory # <-- Revert to this
         default: true
         joints:
           - gripper_joint

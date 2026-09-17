@@ -85,7 +85,7 @@ static const std::map<std::string, std::vector<std::string>> BLOCK_MODEL_NAMES =
   { "s_top",        { "s_top_block_red",        "s_top_block_green",        "s_top_block_blue"        } },
   { "s_left_mid",   { "s_left_mid_block_red",   "s_left_mid_block_green",   "s_left_mid_block_blue"   } },
   { "s_center_mid", { "s_center_mid_block_red", "s_center_mid_block_green", "s_center_mid_block_blue" } },
-  { "s_bot_left",   { "s_bot_left_block_red",   "s_bot_left_block_green",   "s_bot_left_block_blue"   } },
+  { "s_bot_left",   { "s_bot_left_block_red",   "s_bot_left_block_blue",   "s_bot_left_block_green"   } },
   { "s_bot_center", { "s_bot_center_block_red", "s_bot_center_block_green", "s_bot_center_block_blue" } },
 };
 
@@ -499,7 +499,7 @@ void MTCTaskNode::execute(const std::shared_ptr<GoalHandleArmCommand> goal_handl
     {
       const StationTemplate& tpl = station_tpl_it->second;
 
-      static constexpr double SLOT_SPACING = 0.12;
+      static constexpr double SLOT_SPACING = 0.144;
       const double slot_x = (goal->block_slot - 1) * SLOT_SPACING;
       const double slot_z = tpl.box_dim_z / 2.0 + BLOCK_DIM_Z / 2.0 + 0.08;
 
